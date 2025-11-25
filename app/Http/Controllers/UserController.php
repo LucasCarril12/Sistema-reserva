@@ -26,16 +26,16 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
-        $request->valide([
+        $request->validate([
             'nombres' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
             'teléfono' => 'required|string|max:15',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'rol_id' => 'required|integer',
-            'foto' => 'nulleable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $foroPath = null;
+        $fotoPath = null;
         if($request->hasFile('foto')){
             $fotoPath = $request->file('foto')->store('fotos','public');
         }
@@ -53,7 +53,7 @@ class UserController extends Controller
 
         ]);
 
-        return redirect()->route('usuarios.index')->with('success','Registro creado correctamente');
+        return redirect()->route('usuarios.index')->with('success_create','Registro creado correctamente');
     }
 
     // Editamos un registro
@@ -66,13 +66,13 @@ class UserController extends Controller
 
     // Actualizamos un registro
     public function update(Request $request, $id){
-        $request->valide([
+        $request->validate([
             'nombres' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
             'teléfono' => 'required|string|max:15',
             'email' => 'required|string|email|max:255|unique:users,email,' .$id, //vemos que no se repita el correo
             'rol_id' => 'required|integer',
-            'foto' => 'nulleable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $usuario = User::findOrFail($id);
@@ -98,6 +98,6 @@ class UserController extends Controller
         $usuario = User::findOrFail($id);
         $usuario->delete();
 
-        return redirect()->route('usuarios.index')->with('success','Registro eliminado correctamente');
+        return redirect()->route('usuarios.index')->with('success_delete','Registro eliminado correctamente');
     }
 }

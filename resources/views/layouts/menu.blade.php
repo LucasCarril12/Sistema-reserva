@@ -40,7 +40,8 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
 
-                {{-- ---condicion si es usuario --- --}}
+                {{-- ::::: COMO LO VE UN USUARIO :::: --}}
+
                 @if(Auth::user()->rol_id == 3)
                 {{-- --- USUARIO --- --}}
                 <li class="menu-title"><span>USUARIO</span></li>
@@ -48,27 +49,28 @@
                 {{-- --- NUEVA RESERVA --- --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#">
-                        <i class="ri-dashboard-2-line"></i> <span>Nueva Reserva</span>
+                        <i class='bx  bx-plus'></i> <span>Nueva Reserva</span>
                     </a>
                 </li>
 
                 {{-- --- CONSULTAR RESERVA --- --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#">
-                        <i class="ri-dashboard-2-line"></i> <span>Consultar Reserva</span>
+                        <i class='bx  bx-bus'></i>  <span>Consultar Reserva</span>
                     </a>
                 </li>
 
                 {{-- --- CALENDARIO --- --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#">
-                        <i class="ri-dashboard-2-line"></i> <span>Calendario</span>
+                        <i class='bx  bx-calendar-event'></i> <span>Calendario</span>
                     </a>
                 </li>
 
                 @endif
 
-                {{-- --- CONDICION SI ES GUIA --- --}}
+                {{-- ::::: CONDICION SI ES GUIA ::::: --}}
+
                 @if(Auth::user()->rol_id == 2)
                 {{-- --- GUIA --- --}}
                 <li class="menu-title"><span>GUIA</span></li>
@@ -76,13 +78,14 @@
                 {{-- --- CALENDARIO --- --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#">
-                        <i class="ri-dashboard-2-line"></i> <span>Calendario</span>
+                        <i class='bx  bx-calendar-event'></i> <span>Calendario</span>
                     </a>
                 </li>
 
                 @endif
 
-                {{-- --- CONDICION SI ES ADMIN --- --}}
+                {{-- ::::: CONDICION SI ES ADMIN ::::: --}}
+
                 @if(Auth::user()->rol_id == 1)
 
                 {{-- --- ADMIN --- --}}
@@ -90,22 +93,22 @@
 
                 {{-- --- NUEVA RESERVA --- --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
-                        <i class="ri-dashboard-2-line"></i> <span>Nueva Reserva</span>
+                    <a class="nav-link menu-link" href="{{ route('reservations.create') }}">
+                        <i class='bx  bx-plus'></i> <span>Nueva Reserva</span>
                     </a>
                 </li>
 
                 {{-- --- CONSULTAR RESERVA --- --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
-                        <i class="ri-dashboard-2-line"></i> <span>Consultar Reserva</span>
+                    <a class="nav-link menu-link" href="{{ route('reservations.index') }}">
+                        <i class='bx  bx-bus'></i><span>Consultar Reserva</span>
                     </a>
                 </li>
 
                 {{-- --- CALENDARIO --- --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#">
-                        <i class="ri-dashboard-2-line"></i> <span>Calendario</span>
+                        <i class='bx  bx-calendar-event'></i> <span>Calendario</span>
                     </a>
                 </li>
 
@@ -113,7 +116,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('usuarios.index') }}">
-                        <i class="ri-dashboard-2-line"></i> <span>Mant. Usuarios</span>
+                        <i class='bx  bx-gear'></i> <span>Mant. Usuarios</span>
                     </a>
                 </li>
 

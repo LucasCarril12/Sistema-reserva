@@ -114,6 +114,12 @@
                                     <input type="password" id="password-confirm" name="password_confirmation" class="form-control" placeholder="Confirme la contraseña" required>
                                 </div>
 
+                                {{--TODO: Agregar campo de "¿Cómo nos conociste?" en la BD --}}
+                                {{-- <div class="mb-3">
+                                    <label class="form-label" for="password-confirm">{{ __('¿Como nos conocistes?:') }}</label>
+                                    <input type="text" id="how_did_you_know" name="how_did_you_know" class="form-control" placeholder="Ingrese cómo nos conociste" >
+                                </div> --}}
+
                                 {{-- --- BOTON --- --}}
 
                                 <div class="mt-4">
@@ -128,7 +134,7 @@
                 <!-- end card -->
 
                 <div class="mt-4 text-center">
-                    <p class="mb-0">¿No tienes cuenta? <a href="{{ route('register')}}" class="fw-semibold text-primary text-decoration-underline"> Crear Cuenta! </a> </p>
+                    <p class="mb-0">¿Ya tienes cuenta? <a href="{{ route('login')}}" class="fw-semibold text-primary text-decoration-underline"> Iniciar Sesión </a> </p>
                 </div>
 
             </div>

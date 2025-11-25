@@ -29,6 +29,8 @@
             <div class="card-body">
                 <form class="row gy-1" method="POST" action="{{ route('usuarios.store') }}" enctype="multipart/form-data">
 
+                    @csrf
+
                     {{-- --IMPUT NOMBRE-- --}}
 
                     <div class="col-xxl-3 col-md-6">
@@ -83,7 +85,7 @@
                         <div>
                             <label for="rol_id" class="form-label">{{ __('Rol:') }} <span class="text-danger">*</span></label>
                             <select class="form-select @error('rol_id') is-invalid @enderror" id="rol_id" name="rol_id" required>
-                                @foreach ($roles as $rol)
+                                @foreach ($roles->reverse() as $rol)
                                     <option value="{{ $rol->id }}">{{ $rol->name }}</option> {{-- Muestra las opciones del los roles con el nombre --}}
                                 @endforeach
                             </select>
@@ -101,7 +103,7 @@
                     <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="email" class="form-label">{{ __('Correo Electrónico:') }} <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" value="{{ old('email') }}" required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
 
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -124,17 +126,27 @@
                     {{-- --- FOTO --- --}}
 
                     <div class="col-xxl-3 col-md-6">
-                        <label for="foto" class="form-label">{{ __('Foto de perfil (Opcional):') }}</label>
-                        <input type="file" class="form-control pe-5 @error('foto') is-invalid @enderror" id="foto" placeholder="Adjunte una foto de perfil" name="foto" autocomplete="foto" >
-                        @error('foto')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div>
+                            <label for="foto" class="form-label">{{ __('Foto de perfil (Opcional):') }}</label> {{-- jpg,jpeg,png --}}
+                            <input type="file" class="form-control pe-5 @error('foto') is-invalid @enderror" id="foto" placeholder="Adjunte una foto de perfil" name="foto" autocomplete="foto" >
+                            <span class="text-danger">.jpg, .jpeg o .png</span>
+                            @error('foto')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
 
-                    {{-- --- BOTON GUARDAR -- --}}
+                    {{-- --- BOTON CANCELAR -- --}}
 
+                    <div class="col-xxl-12 col-md-6 d-flex justify-content-start align-items-end">
+                        <div>
+                            <br>
+                            <a href="{{ route('usuarios.index') }}" class="btn btn-danger"> {{ __('Cancelar')}} </a>
+                            <button type="submit" class="btn btn-success">{{ __('Guardar Registro')}}</button>
+                        </div>
+                    </div>
 
 
                 </form>

@@ -49,12 +49,13 @@
                             <td>{{ $usuario->teléfono }}</td>
                             <td>{{ $usuario->role->name }}</td>
                             <td>
+                                {{-- -- boton editar -- --}}
                                 <a href="{{ route('usuarios.edit', $usuario->id) }}" class="btn btn-sm btn-primary">Editar</a>
                                 {{-- -- boton eliminar -- --}}
-                                <form action="{{ route('usuarios.destroy', $usuario->id) }}" method="POST" style="display: inline-block;">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmarEliminacion({{ $usuario->id }})">Eliminar</button>
+                                <form id="delete-form-{{ $usuario->id }}" action="{{ route('usuarios.destroy',$usuario->id) }}" method="POST" style="display: none;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -69,13 +70,112 @@
 <!-- end page title -->
 @endsection
 
+
 @push('scripts')
+{{-- --- llamamos a datatables --- --}}
 <script>
     $(document).ready(function() {
         // --- llamamos a la tabla que le pusimos id usuarioTable ---
-        $('#usuariosTable').DataTable({
-
-        });
+        $('#usuariosTable').DataTable();
     });
 </script>
+
+{{-- -- ::::::::::: MENSAJES :::::::::: -- --}}
+
+{{-- mensaje eliminado con exito --}}
+
+@if(session('success_delete'))
+{{--en usercontroller tenemos el return de eliminar con "success_delete"  --}}
+<script>
+    const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+    });
+    Toast.fire({
+    icon: "success",
+    title: "¡Registro eliminado con éxito!"
+    });
+
+</script>
+@endif
+
+
+{{-- mensaje editado con exito --}}
+
+@if(session('success')) {{-- en usercontroller tenemos el return de editar con "success" --}}
+<script>
+    const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+    });
+    Toast.fire({
+    icon: "success",
+    title: "¡Cambio realizado con éxito!"
+    });
+
+</script>
+@endif
+
+{{-- ---- Registro exitoso ---- --}}
+
+@if(session('success_create')) {{-- en usercontroller tenemos el return de editar con "success_create" --}}
+<script>
+    const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+    });
+    Toast.fire({
+    icon: "success",
+    title: "¡Registro creado con éxito!"
+    });
+
+</script>
+@endif
+
+
+{{---- confirmar eliminacion --- --}}
+<script>
+    function confirmarEliminacion(usuarioId) {
+        Swal.fire({
+            title: "¿Estas seguro?",
+            text: "¡Esta acción NO se puede revertir!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, Eliminar!",
+            cancelButtonText: "Cancelar"
+            }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + usuarioId).submit();
+            }
+        });
+    }
+</script>
+
+
+
+
+
 @endpush

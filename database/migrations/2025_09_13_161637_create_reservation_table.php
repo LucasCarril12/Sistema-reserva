@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('reservation_date');
             $table->time('start_time');
             $table->time('end_time');
-            $table->enum('status',['Pendiente','Confirmada','Cancelada'])->default('Confirmada');
+            $table->enum('status',['pendiente','confirmada','cancelada'])->default('Confirmada');
             $table->decimal('total_amount',8,2)->nullable();
             $table->enum('payment_status',['Pendiente','Pagado','fallido'])->default('Pendiente');
             $table->text('cancellation_raseon')->nullable();
