@@ -28,9 +28,9 @@ class ReservationController extends Controller
         //filtramos usuarios y los almacenamos en una variable
         $users = User::where('rol_id',3)->whereNull('deleted_at')->get(); //muestra a todos los usuarios activos para poder generar reserva
 
-        $consultans = User::where('rol_id',2)->whereNull('deleted_at')->get(); //Musetra a las guias activas
+        $consultants = User::where('rol_id',2)->whereNull('deleted_at')->get(); //Musetra a las guias activas
 
-        return view('reservations.create',compact('users', 'consultans'));
+        return view('reservations.create',compact('users', 'consultants'));
     }
 
     /**
@@ -40,20 +40,21 @@ class ReservationController extends Controller
     {
         // validamos los datos enviados por el formulario
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'consulta_id' => 'required|exists:users,id',
-            'reservation_date' => 'required|date',
-            'start_time' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:16:00',
-            'end_time' => 'required|date_format:H:i|before_or_equal:16:00',
-            'reservation_status' => 'required|in:pendiente,confirmada,cancelada',
+            // agregar "require|" para hacer obligatorio
+            'user_id' => 'exists:users,id',
+            'consultant_id' => 'exists:users,id',
+            'reservation_date' => 'date',
+            'start_time' => 'date_format:H:i|after_or_equal:08:00|before_or_equal:16:00',
+            'end_time' => 'date_format:H:i|before_or_equal:16:00',
+            'reservation_status' => 'in:pendiente,confirmada,cancelada',
             // si mantenés payment_status en la tabla:
-            'payment_status' => 'required|in:pendiente,pago,fallido',
+            'payment_status' => 'in:pendiente,pago,fallido',
         ]);
 
         // Asegurate de tener estos campos en $fillable dentro de App\Models\Reservation
         $reservation = Reservation::create([
             'user_id' => $request->user_id,
-            'consulta_id' => $request->consulta_id,
+            'consultant_id' => $request->consultant_id,
             'reservation_date' => $request->reservation_date,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,

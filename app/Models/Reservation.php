@@ -14,7 +14,7 @@ class Reservation extends Model
     //Elementos que se pueden completar
     protected $fillable = [
     'user_id',
-    'consulta_id',
+    'consultant_id',
     'reservation_date',
     'start_time',
     'end_time',
@@ -30,6 +30,6 @@ class Reservation extends Model
     }
 
     public function consultant(){
-        return $this->belongsTo(User::class,'consulta_id');
+        return $this->belongsTo(User::class,'consultant_id');
     }
 }

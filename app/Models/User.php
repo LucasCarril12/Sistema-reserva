@@ -77,7 +77,7 @@ class User extends Authenticatable
 
     public function consultantReservations()
     {
-        return $this->hasMany(Reservation::class,'consulta_id');
+        return $this->hasMany(Reservation::class,'consultant_id');
     }
 
 

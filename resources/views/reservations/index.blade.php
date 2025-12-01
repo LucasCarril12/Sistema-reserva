@@ -79,6 +79,8 @@
                             {{-- --- Fecha Solicitada --- --}}
                             <td>{{ $reservation->reservation_date }}</td>
 
+                            <td>{{ $reservation->consultant->nombres }}</td>
+
                             {{-- --- Hora solicitada --- --}}
                             <td>{{ $reservation->start_time }}</td>
 
