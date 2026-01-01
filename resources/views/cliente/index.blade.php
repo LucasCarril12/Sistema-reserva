@@ -26,7 +26,7 @@
                 <h5 class="card-title mb-0">Listado Reserva</h5>
             </div>
             <div class="card-body table-responsive">
-                <a href="{{ route('reservations.create') }}" class="btn btn-primary waves-effect waves-light">Nueva Reserva</a>
+                <a href="{{ route('cliente.reserva') }}" class="btn btn-primary waves-effect waves-light">Nueva Reserva</a>
                 <br><br> {{-- Le damos un espacio --}}
                 <table id="reservationsTable" class="table table-bordered dt-responsive nowrap table-striped align-middle " style="width:100%">
                     <thead>
@@ -35,9 +35,8 @@
                             <th></th>
                             <th>Acciones</th>
                             <th>Estado de visita</th>
+                            <th>Nombre de responsable</th>
                             <th>Institución</th>
-                            <th>Responsable</th>
-                            <th>C.I</th>
                             <th>Fecha</th>
                             <th>Hora</th>
                             <th>Total personas</th>
@@ -61,19 +60,19 @@
                         @foreach ($reservations as $reservation)
                         <tr>
                             <td></td>
+
                             {{-- --- Acciones --- --}}
                             <td>
+                                {{-- <button class="btn btn-sm btn-primary btn-delete">Eliminar</button> --}}
+                                <button type="button" class="btn btn-sm btn-primary btn-delete" data-id="{{ $reservation->id }}">Eliminar</button>
 
-                                <a href="{{ route('reservations.edit', $reservation->id) }}" class="btn btn-sm btn-primary">Editar</a>
                                 @if($reservation->reservation_status == 'cancelada')
                                     <button class="btn btn-sm btn-danger btn-cancel" disabled>Cancelar</button>
                                 @else
                                     <button type="button" class="btn btn-sm btn-danger btn-cancel" data-id="{{ $reservation->id }}">Cancelar</button>
                                 @endif
-
-
-
                             </td>
+
                             {{-- ---Estado de visita--- --}}
                             <td>
                                 @if($reservation->reservation_status == 'cancelada')
@@ -86,12 +85,12 @@
                                     <span class="badge bg-warning">{{ $reservation->reservation_status }}</span>
                                 @endif
                             </td>
+
+                            {{-- --- Nombre del responsable --- --}}
+                            <td>{{ $reservation->detail->nombre_responsable ?? '—' }}</td>
+
                             {{-- --- Institución --- --}}
                             <td>{{ $reservation->institucion }} </td>
-                            {{-- --- RESPONSABLE DE LA RESERVA --- --}}
-                            <td>{{ $reservation->detail->nombre_responsable ?? '—' }}</td>
-                            {{-- --- C.I --- --}}
-                            <td>{{ $reservation->detail->ci ?? '—' }}</td>
                             {{-- --- Fecha Solicitada --- --}}
                             <td>{{ $reservation->reservation_date }}</td>
                             {{-- --- Hora solicitada --- --}}
@@ -111,7 +110,7 @@
                             {{-- Telefono 2 --}}
                             <td>{{ $reservation->detail->telefono2 ?? '—' }}</td>
                             {{-- Correo --}}
-                            <td>{{ $reservation->detail->email ?? '—' }}</td>
+                            <td>{{ $reservation->user?->email ?? '—' }}</td>
                             {{-- Obs. --}}
                             <td>{{ $reservation->detail->obs ?? '—' }}</td>
                             {{-- Requerimientos --}}
@@ -138,13 +137,7 @@
 
 
 @push('scripts')
-{{-- --- llamamos a datatables --- --}}
-{{-- <script>
-    $(document).ready(function() {
 
-        $('#reservationsTable').DataTable();
-    });
-</script> --}}
 
 {{-- ::::::::::: CANCELACION DE RESERVA ::::::::::: --}}
 <script>
@@ -201,6 +194,45 @@
                             'Ocurrió un error inesperado',
                             'error'
                         );
+                    });
+                }
+            });
+        });
+
+        // Manejo de botón eliminar (marcar como cancelada y ocultar de la vista del usuario)
+        $('.btn-delete').on('click', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var reservationId = btn.data('id');
+
+            if (!reservationId) return;
+
+            Swal.fire({
+                title: '¿Eliminar esta reserva?',
+                text: 'Se marcará como cancelada y se eliminara de tu vista. ¿Continuar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route("reservations.cancel") }}',
+                        method: 'POST',
+                        data: {
+                            reservation_id: reservationId,
+                            cancellation_reason: 'Eliminado por usuario',
+                            _token: '{{ csrf_token() }}'
+                        }
+                    }).done(function(response) {
+                        if (response.success) {
+                            Swal.fire('Eliminada', 'La reserva fue cancelada.', 'success');
+                            btn.closest('tr').fadeOut(300, function() { $(this).remove(); });
+                        } else {
+                            Swal.fire('Error', 'No se pudo eliminar la reserva.', 'error');
+                        }
+                    }).fail(function() {
+                        Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
                     });
                 }
             });

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Reservation;
+
 
 class ReservationDetail extends Model
 {
@@ -12,16 +14,27 @@ class ReservationDetail extends Model
 
     protected $fillable = [
         'reservation_id',
-        'transaction_id',
-        'payer_id',
-        'payer_email',
-        'payment_status',
-        'amount',
-        'response_json',
+        'telefono',
+        'telefono2',
+        'direccion',
+        'obs',
+        'requerimientos',
+        'locomocion',
+        'total_ninios',
+        'total_adultos',
+        'edad',
+        'extranjero',
+        'nombre_responsable',
+        'sala',
+        'email',
+        'ci',
     ];
 
-    public function reservation(){
-        return $this->belongsTo(reservation::class);
+    public function reservation()
+    {
+        return $this->belongsTo(Reservation::class, 'reservation_id');
     }
+
+
 
 }

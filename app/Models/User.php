@@ -30,9 +30,10 @@ class User extends Authenticatable
     protected $fillable = [
         'nombres',
         'apellidos',
-        'foto',
-        'teléfono',
+        'ci',
+        'telefono',
         'email',
+        'foto',
         'password',
         'rol_id',
     ];
@@ -62,7 +63,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
 
     //RELACIONES CON OTROS MODELOS
 

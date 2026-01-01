@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ReservationDetail;
+
 
 class Reservation extends Model
 {
@@ -14,16 +16,13 @@ class Reservation extends Model
     //Elementos que se pueden completar
     protected $fillable = [
     'user_id',
-    'consultant_id',
+    'email',
     'reservation_date',
     'start_time',
-    'end_time',
     'reservation_status',
-    'payment_status', //eliminar
-    'total_amount', //eliminar
-    'cancellation_reason'
+    'cancellation_reason',
+    'institucion'
     ];
-
 
     public function user(){
         return $this->belongsTo(User::class,'user_id');
@@ -32,4 +31,10 @@ class Reservation extends Model
     public function consultant(){
         return $this->belongsTo(User::class,'consultant_id');
     }
+
+    public function detail()
+    {
+        return $this->hasOne(ReservationDetail::class, 'reservation_id');
+    }
+
 }

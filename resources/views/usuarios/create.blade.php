@@ -32,7 +32,6 @@
                     @csrf
 
                     {{-- --IMPUT NOMBRE-- --}}
-
                     <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="nombres" class="form-label">{{ __('Nombre:') }} <span class="text-danger">*</span></label>
@@ -48,7 +47,6 @@
                     </div>
 
                     {{-- -- IMPUT APELLIDO -- --}}
-
                     <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="apellidos" class="form-label">{{ __('Apellido:') }} <span class="text-danger">*</span></label>
@@ -63,14 +61,27 @@
                         </div>
                     </div>
 
-                    {{-- -- INPUT TELÉFONO -- --}}
-
+                     {{-- --- CI --- --}}
                     <div class="col-xxl-3 col-md-6">
                         <div>
-                            <label for="teléfono" class="form-label">{{ __('Teléfono:') }} <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('teléfono') is-invalid @enderror" id="teléfono" name="teléfono" value="{{ old('teléfono') }}" required>
+                            <label for="ci" class="form-label">{{ __('Cédula de Identidad:') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('ci') is-invalid @enderror" id="ci" name="ci" value="{{ old('ci') }}" required>
 
-                            @error('teléfono')
+                            @error('ci')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+
+                        </div>
+                    </div>
+
+                    {{-- -- INPUT TELEFONO -- --}}
+                    <div class="col-xxl-3 col-md-6">
+                        <div>
+                            <label for="telefono" class="form-label">{{ __('Telefono:') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('telefono') is-invalid @enderror" id="telefono" name="telefono" value="{{ old('telefono') }}" required>
+                            @error('telefono')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -80,7 +91,6 @@
                     </div>
 
                     {{-- -- IMPUT ROL -- --}}
-
                     <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="rol_id" class="form-label">{{ __('Rol:') }} <span class="text-danger">*</span></label>
@@ -99,7 +109,6 @@
                     </div>
 
                     {{-- -- IMPUT CORREO -- --}}
-
                     <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="email" class="form-label">{{ __('Correo Electrónico:') }} <span class="text-danger">*</span></label>
@@ -115,16 +124,17 @@
                     </div>
 
                     {{-- -- IMPUT CONTRASEÑA -- --}}
-
                     <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="password" class="form-label">{{ __('Contraseña:') }}</label>
-                            <input type="text" class="form-control " id="password" value="12345678" readonly>
+                            {{-- <input type="text" class="form-control " id="password" value="12345678" readonly> --}}
+                            <input type="hidden" name="password" value="12345678">
+                            <input type="text" class="form-control" value="12345678" readonly>
+
                         </div>
                     </div>
 
                     {{-- --- FOTO --- --}}
-
                     <div class="col-xxl-3 col-md-6">
                         <div>
                             <label for="foto" class="form-label">{{ __('Foto de perfil (Opcional):') }}</label> {{-- jpg,jpeg,png --}}
@@ -139,7 +149,6 @@
                     </div>
 
                     {{-- --- BOTON CANCELAR -- --}}
-
                     <div class="col-xxl-12 col-md-6 d-flex justify-content-start align-items-end">
                         <div>
                             <br>

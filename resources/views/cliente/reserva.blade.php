@@ -22,76 +22,42 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header align-items-center d-flex ">
-                <div class="card-header align-items-center d-flex border-bottom-0">
+                <div class="card-header align-items-center d-flex border-bottom-0 p-0">
                     <h4 class="card-title mb-0 flex-grow-1">Crear nueva reserva</h4>
                 </div>
             </div>
             <div class="card-body">
-                <form class="row gy-1" id="reservationForm" method="POST" action="{{ route('reservations.store') }}">
+                {{-- ::::: MENSAJE DE ERRORES ::::: --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>⚠️ Hay errores en el formulario</strong>
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form class="row gy-1" id="reservationForm" method="POST" action="{{ route('cliente.reserva.store') }}">
                     @csrf
 
                     <p style="color: #767676; font-size: 18px; font-weight:600;">Datos personales:</p>
 
                     {{-- :::: SELECCIONAR USUARIO :::: --}}
-                    <div class="col-xxl-6 col-md-6 mt-3" style="width:50%;">
+                    <div class="col-xxl-6 col-md-6 mt-3" style="width:100%;">
                         <div>
-                            @php $selectedUser = $users->firstWhere('id', old('user_id')); @endphp
-                            <label class="form-label">Seleccionar Usuario:</label>
-
-                            <input type="text"
-                                class="form-control"
-                                id="user_search"
-                                name="user_search"
-                                placeholder="Buscar usuario..."
-                                list="users_list"
-                                autocomplete="off"
-                                value="{{ old('user_search', $selectedUser ? $selectedUser->name.' - '.$selectedUser->email : '') }}">
-
-                            <datalist id="users_list">
-                                @foreach($users as $user)
-                                    <option value="{{ $user->name }} - {{ $user->email }}"
-                                            data-id="{{ $user->id }}" data-email="{{ $user->email }}">
-                                    </option>
-                                @endforeach
-                            </datalist>
-
-                            <input type="hidden" name="user_id" id="user_id" value="{{ old('user_id') }}">
-
-                            @error('user_id')
-                                <span class="invalid-feedback d-block">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <label for="user" class="form-label">{{ __('Usuario:') }}</label>
+                            <input id="user" type="text" value="{{ Auth::user()->nombres }} {{ Auth::user()->apellidos }}" readonly>
+                            <input name="user_id" id="user_id" value="{{ Auth::user()->id }}" type="hidden">
                         </div>
                     </div>
 
-
-                    {{-- :::: NOMBRE DEL RESPONSABLE :::: --}}
-                    <div class="col-xxl-3 col-md-6 mt-3">
+                    {{-- :::: NOMBRE RESPONSABLE :::: --}}
+                    <div class="col-xxl-6 col-md-6 mt-3">
                         <div>
                             <label for="nombre_responsable" class="form-label">{{ __('Nombre del responsable:') }}<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control " id="nombre_responsable" name="nombre_responsable" placeholder="Nombre del responsable">
-                        </div>
-                    </div>
-
-                    {{-- :::: CI :::: --}}
-                    <div class="col-xxl-3 col-md-6 mt-3">
-                        <div>
-                            <label for="ci" class="form-label">{{ __('C.I del responsable:') }}<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control " id="ci" name="ci" placeholder="C.I del responsable">
-                        </div>
-                    </div>
-
-                    {{-- :::: CORREO ELECTRONICO :::: --}}
-                    <div class="col-xxl-3 col-md-6 mt-3">
-                        <div>
-                            <label for="email" class="form-label">{{ __('Correo Electrónico:') }}</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Correo Electrónico" value="{{ old('email', optional($users->firstWhere('id', old('user_id')))->email) }}" @if(old('user_id')) readonly @endif>
-                            @error('email')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <input type="text" class="form-control " id="nombre_responsable" name="nombre_responsable" placeholder="Nombre del responsable" style="text-transform: capitalize;">
                         </div>
                     </div>
 
@@ -241,7 +207,6 @@
                     </div>
 
                     {{-- :::: OBS :::: --}}
-
                     <div class="col-xxl-6 col-md-6 mt-3">
                         <div>
                             <label for="obs" class="form-label">{{ __('Observaciones:') }}<span class="text-danger">*</span></label>
@@ -252,20 +217,7 @@
                     {{-- :::: ESTADO DE LA RESERVA :::: --}}
                     <div class="col-xxl-3 col-md-6 mt-3">
                         <div>
-                            <label for="reservation_status" class="form-label">{{ __('Estado de la reserva:') }} <span class="text-danger">*</span></label>
-                            <select class="form-select @error('reservation_status') is-invalid @enderror" id="reservation_status" name="reservation_status" required>
-                                <option value="">Seleccionar Estado</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="confirmada">Confirmada</option>
-                                <option value="realizada">Realizada</option>
-                                <option value="cancelada">Cancelada</option>
-                            </select>
-                            @error('reservation_status')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-
+                            <input type="hidden" name="reservation_status" value="pendiente">
                         </div>
                     </div>
 

@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
-
+use Illuminate\Validation\Rule;
 // libreria para encriptar contraseña
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -17,7 +18,6 @@ class UserController extends Controller
     }
 
     // Creamos un registro
-
     public function create(){
         //obtener los roles para poder seleccionar al momento de crear un registro
         $roles = Role::all();
@@ -26,13 +26,15 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
+
         $request->validate([
             'nombres' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
-            'teléfono' => 'required|string|max:15',
+            'telefono' => 'required|string|max:15',
             'email' => 'required|string|email|max:255|unique:users,email',
             'rol_id' => 'required|integer',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'ci' => 'required|numeric|digits_between:6,8|unique:users,ci'
         ]);
 
         $fotoPath = null;
@@ -45,11 +47,12 @@ class UserController extends Controller
         User::create([
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
-            'teléfono' => $request->teléfono,
+            'telefono' => $request->telefono,
             'email' => $request->email,
             'rol_id' => $request->rol_id,
             'password' => Hash::make('12345678'), //Cuando se cree un usuario este tendra la contraseña "12345678" por defecto
             'foto' => $fotoPath,
+            'ci' => $request->ci,
 
         ]);
 
@@ -66,29 +69,64 @@ class UserController extends Controller
 
     // Actualizamos un registro
     public function update(Request $request, $id){
+
+        Log::info('Update request headers', ['content_length' => $request->headers->get('content-length')]);
+        Log::info('Update request input keys', ['inputs' => array_keys($request->all())]);
+        Log::info('Update request files keys', ['files' => array_keys($request->files->all())]);
+
         $request->validate([
-            'nombres' => 'required|string|max:255',
+            'nombres'   => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
-            'teléfono' => 'required|string|max:15',
-            'email' => 'required|string|email|max:255|unique:users,email,' .$id, //vemos que no se repita el correo
-            'rol_id' => 'required|integer',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'telefono'  => 'required|string|max:15',
+            'rol_id'    => 'required|integer',
+            'foto'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')
+                    ->ignore($id)
+                    ->whereNull('deleted_at'),
+            ],
+
+            'ci' => [
+                'required',
+                'digits_between:6,8',
+                Rule::unique('users', 'ci')
+                    ->ignore($id)
+                    ->whereNull('deleted_at'),
+            ],
         ]);
 
         $usuario = User::findOrFail($id);
 
+        $fotoPath = null;
         if($request->hasFile('foto')){
-            $fotoPath = $request->file('foto')->store('fotos','public');
-            $usuario->foto = $fotoPath;
+            try {
+                $fotoPath = $request->file('foto')->store('fotos','public');
+                Log::info('Foto subida en edición de usuario', ['user_id' => $id, 'path' => $fotoPath, 'size' => $request->file('foto')->getSize()]);
+            } catch (\Exception $e) {
+                Log::error('Error guardando foto en edición de usuario', ['user_id' => $id, 'mensaje' => $e->getMessage()]);
+            }
         }
 
-        $usuario->update([
+        $updateData = [
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
-            'teléfono' => $request->teléfono,
+            'telefono' => $request->telefono,
             'email' => $request->email,
             'rol_id' => $request->rol_id,
-        ]);
+            'ci' => $request->ci,
+        ];
+
+        if($fotoPath){
+            $updateData['foto'] = $fotoPath;
+        }
+
+        $updated = $usuario->update($updateData);
+
+        // Log the stored value from DB and whether the update succeeded
+        Log::info('Usuario actualizado', ['user_id' => $id, 'updated' => $updated, 'db' => $usuario->fresh()->toArray()]);
 
         return redirect()->route('usuarios.index')->with('success', 'Registro actualizado correctamente');
     }

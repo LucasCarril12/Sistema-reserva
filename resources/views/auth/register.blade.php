@@ -58,12 +58,23 @@
                                     @enderror
                                 </div>
 
+                                {{-- --- C.I --- --}}
+                                <div class="mb-3">
+                                    <label for="ci" class="form-label">{{ __('Cédula de Identidad:') }} <span class="text-danger">*</span></label> {{-- El span me sirve para poner el * en rojo para hacer entender que es obligatorio --}}
+                                    <input type="text" class="form-control pe-5 @error('ci') is-invalid @enderror" id="ci" placeholder="Ingrese su Cédula de Identidad: ej: 12345678"
+                                    name="ci" value="{{ old('ci') }}" title="Ingrese una cédula válida de 6 a 8 dígitos. Ej: 12345678" required>
+                                    @error('ci')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                                 {{-- --- TELEFONO --- --}}
 
                                 <div class="mb-3">
-                                    <label for="teléfono" class="form-label">{{ __('Teléfono:') }} <span class="text-danger">*</span></label> {{-- El span me sirve para poner el * en rojo para hacer entender que es obligatorio --}}
-                                    <input type="tel" class="form-control pe-5 @error('teléfono') is-invalid @enderror" id="telefono" placeholder="Ingrese numero de telefono: ej: 091123456" name="teléfono" value="{{ old('teléfono') }}" required autocomplete="teléfono" pattern="^(\+598)?\s?\d{9}$" title="Ingrese un número de teléfono válido. Ej: 091123456">
-                                    @error('teléfono')
+                                    <label for="telefono" class="form-label">{{ __('Teléfono:') }} <span class="text-danger">*</span></label> {{-- El span me sirve para poner el * en rojo para hacer entender que es obligatorio --}}
+                                    <input type="tel" class="form-control pe-5 @error('telefono') is-invalid @enderror" id="telefono" placeholder="Ingrese numero de telefono: ej: 091123456" name="telefono" value="{{ old('telefono') }}" required autocomplete="telefono" pattern="^(\+598)?\s?\d{9}$" title="Ingrese un número de teléfono válido. Ej: 091123456">
+                                    @error('telefono')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -113,12 +124,6 @@
                                     <label class="form-label" for="password-confirm">{{ __('Confirmar contraseña:') }} <span class="text-danger">*</span></label>
                                     <input type="password" id="password-confirm" name="password_confirmation" class="form-control" placeholder="Confirme la contraseña" required>
                                 </div>
-
-                                {{--TODO: Agregar campo de "¿Cómo nos conociste?" en la BD --}}
-                                {{-- <div class="mb-3">
-                                    <label class="form-label" for="password-confirm">{{ __('¿Como nos conocistes?:') }}</label>
-                                    <input type="text" id="how_did_you_know" name="how_did_you_know" class="form-control" placeholder="Ingrese cómo nos conociste" >
-                                </div> --}}
 
                                 {{-- --- BOTON --- --}}
 

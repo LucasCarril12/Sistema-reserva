@@ -43,26 +43,28 @@
                 {{-- ::::: COMO LO VE UN USUARIO :::: --}}
 
                 @if(Auth::user()->rol_id == 3)
+
                 {{-- --- USUARIO --- --}}
+
                 <li class="menu-title"><span>USUARIO</span></li>
 
-                {{-- --- NUEVA RESERVA --- --}}
+                {{-- --- NUEVA RESERVA USUARIO --- --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
+                    <a class="nav-link menu-link" href="{{ route('cliente.reserva')  }}">
                         <i class='bx  bx-plus'></i> <span>Nueva Reserva</span>
                     </a>
                 </li>
 
-                {{-- --- CONSULTAR RESERVA --- --}}
+                {{-- --- CONSULTAR RESERVA USUARIO--- --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
-                        <i class='bx  bx-bus'></i>  <span>Consultar Reserva</span>
+                    <a class="nav-link menu-link" href="{{ route('cliente.reservas') }}">
+                        <i class='bx  bx-bus'></i> <span>Lista de Reservas</span>
                     </a>
                 </li>
 
-                {{-- --- CALENDARIO --- --}}
+                {{-- --- CALENDARIO USUARIO --- --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
+                    <a class="nav-link menu-link" href="{{ route('cliente.calendario') }}">
                         <i class='bx  bx-calendar-event'></i> <span>Calendario</span>
                     </a>
                 </li>
@@ -72,42 +74,60 @@
                 {{-- ::::: CONDICION SI ES GUIA ::::: --}}
 
                 @if(Auth::user()->rol_id == 2)
-                {{-- --- GUIA --- --}}
-                <li class="menu-title"><span>GUIA</span></li>
+                <li class="menu-title"><span>Guia</span></li>
 
-                {{-- --- CALENDARIO --- --}}
+                {{-- --- NUEVA RESERVA GUIA --- --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
+                    <a class="nav-link menu-link" href="{{ route('reservations.create') }}">
+                        <i class='bx bx-plus'></i><span>Nueva Reserva</span>
+                    </a>
+                </li>
+
+                {{-- --- CONSULTAR RESERVA GUIA--- --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('reservations.index') }}">
+                        <i class='bx  bx-bus'></i><span>Lista de Reservas</span>
+                    </a>
+                </li>
+
+                {{-- --- CALENDARIO GUIA--- --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('guia.calendario') }}">
                         <i class='bx  bx-calendar-event'></i> <span>Calendario</span>
                     </a>
                 </li>
 
                 @endif
 
+
+
                 {{-- ::::: CONDICION SI ES ADMIN ::::: --}}
 
                 @if(Auth::user()->rol_id == 1)
 
+
+
+
                 {{-- --- ADMIN --- --}}
                 <li class="menu-title"><span>ADMINISTRADOR</span></li>
 
-                {{-- --- NUEVA RESERVA --- --}}
+                {{-- --- NUEVA RESERVA ADMIN --- --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('reservations.create') }}">
-                        <i class='bx  bx-plus'></i> <span>Nueva Reserva</span>
+                        <i class='bx bx-plus'></i> <span>Nueva Reserva</span>
                     </a>
                 </li>
 
-                {{-- --- CONSULTAR RESERVA --- --}}
+                {{-- --- CONSULTAR RESERVA ADMIN --- --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('reservations.index') }}">
-                        <i class='bx  bx-bus'></i><span>Consultar Reserva</span>
+                        <i class='bx  bx-bus'></i><span>Lista de Reservas</span>
                     </a>
                 </li>
 
-                {{-- --- CALENDARIO --- --}}
+                {{-- --- CALENDARIO ADMIN--- --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#">
+                    <a class="nav-link menu-link" href="{{ route('reservations.calendario') }}">
                         <i class='bx  bx-calendar-event'></i> <span>Calendario</span>
                     </a>
                 </li>

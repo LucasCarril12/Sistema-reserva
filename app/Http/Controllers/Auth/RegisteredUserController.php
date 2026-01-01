@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -29,25 +30,36 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Log::info('Registro request headers', ['content_length' => $request->headers->get('content-length')]);
+        Log::info('Registro files keys', ['files' => array_keys($request->files->all())]);
         $request->validate([
             'nombres' => ['required', 'string', 'max:255'],
             'apellidos' => ['required', 'string', 'max:255'],
-            'teléfono' => ['required', 'string', 'max:15'],
+            'ci' => ['required', 'digits_between:6,8', 'unique:users,ci'],
+            'telefono' => ['required', 'string', 'max:15'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],        ], [
+            'ci.digits_between' => 'C.I invalida',        ]);
 
         //veo si a subido una foto o no
         $fotoPath = null;
         if($request->hasFile('foto')){
-            $fotoPath=$request->file('foto')->store('fotos','public');
+            try {
+                $fotoPath = $request->file('foto')->store('fotos','public');
+                Log::info('Foto subida en registro', ['path' => $fotoPath, 'size' => $request->file('foto')->getSize()]);
+            } catch (\Exception $e) {
+                Log::error('Error guardando foto en registro', ['mensaje' => $e->getMessage()]);
+            }
+        } else {
+            Log::info('No se detectó archivo para campo foto en la petición de registro', ['hasFile' => $request->hasFile('foto')]);
         }
 
         $user = User::create([
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
-            'teléfono' => $request->teléfono,
+            'ci' => $request->ci,
+            'telefono' => $request->telefono,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'foto'=>$fotoPath,

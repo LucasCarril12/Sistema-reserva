@@ -26,13 +26,14 @@
                 <h5 class="card-title mb-0">Listado Usuarios</h5>
             </div>
             <div class="card-body">
-                <a href="{{ route('usuarios.create') }}" class="btn btn-primary waves-effect waves-light">Nuevo Registro</a>
+                <a href="{{ route('usuarios.create') }}" class="btn btn-primary waves-effect waves-light">Nuevo Usuario</a>
                 <br><br> {{-- Le damos un espacio --}}
                 <table id="usuariosTable" class="table table-bordered dt-responsive nowrap table-striped align-middle " style="width:100%">
                     <thead>
                         <tr>
                             <th>Nombres</th>
                             <th>Apellidos</th>
+                            <th>C.I</th>
                             <th>Correo electrónico</th>
                             <th>teléfono</th>
                             <th>Rol</th>
@@ -45,8 +46,9 @@
                         <tr>
                             <td>{{ $usuario->nombres }}</td>
                             <td>{{ $usuario->apellidos }}</td>
+                            <td>{{ $usuario->ci }}</td>
                             <td>{{ $usuario->email }}</td>
-                            <td>{{ $usuario->teléfono }}</td>
+                            <td>{{ $usuario->telefono }}</td>
                             <td>{{ $usuario->role->name }}</td>
                             <td>
                                 {{-- -- boton editar -- --}}

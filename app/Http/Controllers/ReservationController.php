@@ -3,69 +3,461 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
+
 
 //llamamos a nuestr modelo user y reservation
 use App\Models\User;
 use App\Models\Reservation;
+use App\Models\ReservationDetail;
+use Illuminate\Support\Facades\Log;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+use App\Mail\ReservationMail;
+use Illuminate\Support\Facades\Mail;
+
+use Carbon\Carbon;
+
 
 class ReservationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //obtener todas las reservas con relacion usuario y guia
-        $reservations = Reservation::with(['user','consultant'])->get();
+    public function index(){
+        //obtener todas las reservas con relacion usuario , guia y detalles
+        $reservations = Reservation::with(['user','consultant','detail'])->get();
         return view('reservations.index',compact('reservations'));
+    }
+
+    public function indexCliente(){
+        $userId = Auth::user()->id;
+        $reservations = Reservation::where('user_id', $userId)->get();
+        return view('cliente.index',compact('reservations'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //filtramos usuarios y los almacenamos en una variable
-        $users = User::where('rol_id',3)->whereNull('deleted_at')->get(); //muestra a todos los usuarios activos para poder generar reserva
+    public function create(){
+        //obtenemos todos los usuarios no eliminados
+        $users = User::whereNull('deleted_at')->get(); //muestra a todos los usuarios activos para poder generar reserva
 
-        $consultants = User::where('rol_id',2)->whereNull('deleted_at')->get(); //Musetra a las guias activas
+        //Muestra a las guias activas (rol_id = 2)
+        $consultants = User::where('rol_id',2)
+            ->whereNull('deleted_at')
+            ->get();
 
         return view('reservations.create',compact('users', 'consultants'));
+    }
+
+    public function createCliente(){
+        //Muestra a las guias activas (rol_id = 2)
+        $consultants = User::where('rol_id',2)
+            ->whereNull('deleted_at')
+            ->get();
+
+        return view('cliente.reserva',compact('consultants'));
     }
 
     /**
      *  Store es el metodo para registrar en la Base de Datos.
      */
-    public function store(Request $request)
-    {
-        // validamos los datos enviados por el formulario
+    public function store(Request $request){
         $request->validate([
-            // agregar "require|" para hacer obligatorio
-            'user_id' => 'exists:users,id',
-            'consultant_id' => 'exists:users,id',
-            'reservation_date' => 'date',
-            'start_time' => 'date_format:H:i|after_or_equal:08:00|before_or_equal:16:00',
-            'end_time' => 'date_format:H:i|before_or_equal:16:00',
-            'reservation_status' => 'in:pendiente,confirmada,cancelada',
-            // si mantenés payment_status en la tabla:
-            'payment_status' => 'in:pendiente,pago,fallido',
+            'user_id' => 'nullable|exists:users,id',
+            'nombre_responsable' => 'required|string',
+            'ci' => 'required|string',
+            'email' => 'nullable|email',
+            'telefono' => 'required|string',
+            'telefono2' => 'nullable|string',
+
+            'institucion' => 'required|string',
+            'reservation_date' => 'required|date',
+            'sala' => 'required|string',
+            'start_time' => 'required',
+
+            'direccion' => 'required|string',
+            'locomocion' => 'required|string',
+
+            'requerimientos' => 'nullable|string',
+            'total_ninios' => 'required|numeric',
+            'total_adultos' => 'required|numeric',
+            'edad' => 'required|string',
+            'extranjero' => 'required|string',
+            'obs' => 'nullable|string',
+
+            'reservation_status' => 'required|in:pendiente,cancelada,confirmada,realizada',
         ]);
 
-        // Asegurate de tener estos campos en $fillable dentro de App\Models\Reservation
+        // Guardar los datos en reservation
         $reservation = Reservation::create([
-            'user_id' => $request->user_id,
-            'consultant_id' => $request->consultant_id,
+            'user_id' => $request->user_id ?: null,
             'reservation_date' => $request->reservation_date,
             'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
             'reservation_status' => $request->reservation_status,
-            'payment_status' => $request->payment_status,
+            'institucion' => $request->institucion,
         ]);
 
-        // redirigimos al index de reservations (plural) y usamos with() correctamente
-        return redirect()->route('reservations.index')->with('success', '¡Reserva creada correctamente!');
+        // Guardar los detalles en reservation_details
+        ReservationDetail::create([
+            'reservation_id' => $reservation->id,
+            'nombre_responsable' => $request->nombre_responsable,
+            'ci' => $request->ci,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'telefono2' => $request->telefono2,
+            'sala' => $request->sala,
+            'direccion' => $request->direccion,
+            'locomocion' => $request->locomocion,
+            'requerimientos' => $request->requerimientos,
+            'total_ninios' => $request->total_ninios,
+            'total_adultos' => $request->total_adultos,
+            'edad' => $request->edad,
+            'extranjero' => $request->extranjero,
+            'obs' => $request->obs,
+        ]);
+
+        $this->sendConfirmationEmail($reservation);
+
+        return redirect()->route('reservations.index')->with('success_reservation', '¡Reserva creada correctamente!');
+    }
+
+    public function storeCliente(Request $request){
+        $request->validate([
+            'email' => 'nullable|email',
+            'telefono' => 'required|string',
+            'telefono2' => 'nullable|string',
+
+            'institucion' => 'required|string',
+            'reservation_date' => 'required|date',
+            'sala' => 'required|string',
+            'start_time' => 'required',
+
+            'direccion' => 'required|string',
+            'locomocion' => 'required|string',
+
+            'requerimientos' => 'nullable|string',
+            'total_ninios' => 'required|numeric',
+            'total_adultos' => 'required|numeric',
+            'edad' => 'required|string',
+            'extranjero' => 'required|string',
+            'obs' => 'nullable|string',
+        ]);
+
+        // 🔒 El cliente SIEMPRE es el usuario logueado
+        $reservation = Reservation::create([
+            'user_id' => Auth::id(),
+            'reservation_date' => $request->reservation_date,
+            'start_time' => $request->start_time,
+            'reservation_status' => 'pendiente',
+            'institucion' => $request->institucion,
+        ]);
+
+        ReservationDetail::create([
+            'reservation_id' => $reservation->id,
+
+            'nombre_responsable' => $request->nombre_responsable,
+            'ci' => $request->ci,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'telefono2' => $request->telefono2,
+
+            'sala' => $request->sala,
+            'direccion' => $request->direccion,
+            'locomocion' => $request->locomocion,
+
+            'requerimientos' => $request->requerimientos,
+            'total_ninios' => $request->total_ninios,
+            'total_adultos' => $request->total_adultos,
+            'edad' => $request->edad,
+            'extranjero' => $request->extranjero,
+            'obs' => $request->obs,
+        ]);
+
+        $this->sendConfirmationEmail($reservation);
+
+        return redirect()->route('cliente.reservas')->with('success_reservation', '¡Reserva enviada correctamente! Quedó pendiente de confirmación.');
+
     }
 
 
 
+    // Edit seccion
+    public function edit(string $id){
+        $reservation = Reservation::findOrFail($id);
+        $reservation->start_time = Carbon::parse($reservation->start_time)->format('H:i');
+
+        $users = User::where('rol_id',3)
+            ->whereNull('deleted_at')
+            ->get();
+        $consultants = User::where('rol_id',2)
+            ->whereNull('deleted_at')
+            ->get();
+            return view('reservations.edit', compact('reservation', 'users', 'consultants'));
+    }
+
+    public function update(Request $request, string $id){
+        $request->validate([
+            'nombre_responsable' => 'required|string',
+            'ci' => 'required|string',
+            'email' => 'nullable|email',
+            'telefono' => 'required|string',
+            'telefono2' => 'nullable|string',
+            'institucion' => 'required|string',
+            'reservation_date' => 'required|date',
+            'sala' => 'required|string',
+            'start_time' => 'required',
+            'direccion' => 'required|string',
+            'locomocion' => 'required|string',
+            'requerimientos' => 'nullable|string',
+            'total_ninios' => 'required|numeric',
+            'total_adultos' => 'required|numeric',
+            'edad' => 'required|string',
+            'extranjero' => 'required|string',
+            'obs' => 'nullable|string',
+            'reservation_status' => 'required|in:pendiente,cancelada,confirmada,realizada',
+            'cancellation_reason' => 'nullable|string',
+        ]);
+
+        $reservation = Reservation::findOrFail($id);
+
+        // Actualizar solo los campos de la tabla reservations
+        $reservation->update([
+            'reservation_date' => $request->reservation_date,
+            'start_time' => $request->start_time,
+            'reservation_status' => $request->reservation_status,
+            'institucion' => $request->institucion,
+            'cancellation_reason' => $request->cancellation_reason,
+        ]);
+
+        // Actualizar los campos de reservation_details
+        if ($reservation->detail) {
+            $reservation->detail->update([
+            'nombre_responsable' => $request->nombre_responsable,
+            'ci' => $request->ci,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'telefono2' => $request->telefono2,
+            'sala' => $request->sala,
+            'direccion' => $request->direccion,
+            'locomocion' => $request->locomocion,
+            'requerimientos' => $request->requerimientos,
+            'total_ninios' => $request->total_ninios,
+            'total_adultos' => $request->total_adultos,
+            'edad' => $request->edad,
+            'extranjero' => $request->extranjero,
+            'obs' => $request->obs,
+        ]);
+        } else {
+            // Crear el detail si no existe
+            ReservationDetail::create(array_merge(['reservation_id' => $reservation->id], $request->only([
+                'nombre_responsable','ci','email','telefono','telefono2','sala',
+                'direccion','locomocion','requerimientos','total_ninios','total_adultos',
+                'edad','extranjero','obs'
+            ])));
+        }
+
+        return redirect()->route('reservations.index')->with('success','Reserva actualizada correctamente');
+    }
+
+    public function cancel(Request $request){
+        $request->validate([
+            'reservation_id' => 'required|exists:reservations,id',
+            'cancellation_reason' => 'required|string',
+        ]);
+
+        $reservation = Reservation::findOrFail($request->reservation_id);
+        $reservation->reservation_status = 'cancelada';
+        $reservation->cancellation_reason = $request->cancellation_reason;
+        $reservation->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'La reserva ha sido cancelada exitosamente',
+        ]);
+    }
+
+
+    public function getAllReservations(){
+        // $reservations = Reservation::all();
+        $reservations = Reservation::with('detail')->get();
+        $events = [];
+
+        foreach($reservations as $reservation){
+
+            $color = '#e0e0e0';
+            $bordercolor = '#e0e0e0';
+
+            if($reservation->reservation_status === 'confirmada'){
+                $color = '#ffc107';
+                $bordercolor = '#ffc107';
+            }elseif($reservation->reservation_status === 'realizada'){
+                $color = '#28a745';
+                $bordercolor = '#28a745';
+            }elseif($reservation->reservation_status === 'cancelada'){
+                $color = '#dc3545';
+                $bordercolor = '#dc3545';
+            }
+
+            $events[] = [
+                'id' => $reservation->id,
+                'title' => $reservation->institucion.' '.$reservation->start_time,
+                'start' => $reservation->reservation_date.'T'.$reservation->start_time,
+                'backgroundColor'=> $color,
+                'borderColor'=> $bordercolor,
+                'extendedProps' => [
+                    'reservation_status' => $reservation->reservation_status,
+                    'institucion' => $reservation->institucion,
+                    'reservation_date' => $reservation->reservation_date,
+                    'start_time' => $reservation->start_time,
+                    'cancellation_reason' => $reservation->cancellation_reason,
+                    'user' => $reservation->user ? [
+                        'email' => $reservation->user->email,
+                        'name' => $reservation->user->name ?? null,
+                    ] : null,
+                    'detail' => $reservation->detail ? [
+                        'nombre_responsable' => $reservation->detail->nombre_responsable,
+                        'ci' => $reservation->detail->ci,
+                        'email' => $reservation->detail->email,
+                        'telefono' => $reservation->detail->telefono,
+                        'telefono2' => $reservation->detail->telefono2,
+                        'sala' => $reservation->detail->sala,
+                        'direccion' => $reservation->detail->direccion,
+                        'total_ninios' => $reservation->detail->total_ninios,
+                        'total_adultos' => $reservation->detail->total_adultos,
+                        'requerimientos' => $reservation->detail->requerimientos,
+                        'obs' => $reservation->detail->obs,
+                    ] : null,
+                ],
+            ];
+
+        }
+
+        return response()->json($events);
+    }
+
+    public function getAllReservationsCliente(){
+        // $reservations = Reservation::where('user_id', Auth::id())->get();
+        $reservations = Reservation::with('detail')
+        ->where('user_id', Auth::id())
+        ->get();
+        $events = [];
+
+        foreach($reservations as $reservation){
+
+            $color = '#e0e0e0';
+            $bordercolor = '#e0e0e0';
+
+            if($reservation->reservation_status === 'confirmada'){
+                $color = '#ffc107';
+                $bordercolor = '#ffc107';
+            }elseif($reservation->reservation_status === 'realizada'){
+                $color = '#28a745';
+                $bordercolor = '#28a745';
+            }elseif($reservation->reservation_status === 'cancelada'){
+                $color = '#dc3545';
+                $bordercolor = '#dc3545';
+            }
+
+            $events[] = [
+                'id' => $reservation->id,
+                'title' => $reservation->institucion.' '.$reservation->start_time,
+                'start' => $reservation->reservation_date.'T'.$reservation->start_time,
+                'backgroundColor'=> $color,
+                'borderColor'=> $bordercolor,
+                'extendedProps' => [
+                    'reservation_status' => $reservation->reservation_status,
+                    'institucion' => $reservation->institucion,
+                    'reservation_date' => $reservation->reservation_date,
+                    'start_time' => $reservation->start_time,
+                    'cancellation_reason' => $reservation->cancellation_reason,
+                    'user' => $reservation->user ? [
+                        'email' => $reservation->user->email,
+                        'name' => $reservation->user->name ?? null,
+                    ] : null,
+                    'detail' => $reservation->detail ? [
+                        'nombre_responsable' => $reservation->detail->nombre_responsable,
+                        'ci' => $reservation->detail->ci,
+                        'email' => $reservation->detail->email,
+                        'telefono' => $reservation->detail->telefono,
+                        'telefono2' => $reservation->detail->telefono2,
+                        'sala' => $reservation->detail->sala,
+                        'direccion' => $reservation->detail->direccion,
+                        'total_ninios' => $reservation->detail->total_ninios,
+                        'total_adultos' => $reservation->detail->total_adultos,
+                        'requerimientos' => $reservation->detail->requerimientos,
+                        'obs' => $reservation->detail->obs,
+                    ] : null,
+                ],
+            ];
+
+        }
+
+        return response()->json($events);
+    }
+
+
+
+    private function sendConfirmationEmail(Reservation $reservation)
+    {
+        $reservation->load(['detail', 'user']);
+
+        // ⚠️ Si el usuario no tiene mail, no mandamos nada
+        if (!$reservation->user || !$reservation->user->email) {
+            return;
+        }
+
+        $data = [
+            'userName' => $reservation->user->nombres,
+            'nombre_responsable' => $reservation->detail->nombre_responsable,
+            'telefono' => $reservation->detail->telefono,
+            'reservationDate' => $reservation->reservation_date,
+            'start_time' => $reservation->start_time,
+            'total_adultos' => $reservation->detail->total_adultos,
+            'total_ninios' => $reservation->detail->total_ninios,
+            'edad' => $reservation->detail->edad,
+            'sala' => $reservation->detail->sala,
+            'observations' => $reservation->detail->obs,
+        ];
+
+        $html = view('emails.reserva', $data)->render();
+
+        try {
+            $mail = new PHPMailer(true);
+
+            // 🔧 SMTP GMAIL
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = env('MAIL_USERNAME');
+            $mail->Password   = env('MAIL_PASSWORD');
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+
+            $mail->CharSet  = 'UTF-8';
+            $mail->Encoding = 'base64';
+
+            // ✉️ MAIL
+            $mail->setFrom(env('MAIL_FROM_ADDRESS'), 'Museo Aeronáutico');
+            $mail->addAddress($reservation->user->email);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Solicitud de reserva enviada';
+            $mail->Body    = $html;
+
+            $mail->send();
+
+        } catch (Exception $e) {
+            Log::error('Error enviando mail de reserva', [
+                'error' => $mail->ErrorInfo ?? $e->getMessage()
+            ]);
+        }
+    }
 }
+
+
+

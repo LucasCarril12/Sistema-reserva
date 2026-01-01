@@ -23,10 +23,22 @@
         <div class="card">
             <div class="card-header align-items-center d-flex ">
                 <div class="card-header align-items-center d-flex border-bottom-0">
-                    <h4 class="card-title mb-0 flex-grow-1">Nuevo Usuario</h4>
+                    <h4 class="card-title mb-0 flex-grow-1">Editar Usuario</h4>
                 </div>
             </div>
             <div class="card-body">
+                {{-- --- MENSAJE DE ERROR EN EL FORMULARIO --- --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>⚠️ Hay errores en el formulario</strong>
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form class="row gy-1" method="POST" action="{{ route('usuarios.update',$usuario->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -63,14 +75,27 @@
                         </div>
                     </div>
 
-                    {{-- -- INPUT TELÉFONO -- --}}
+                    {{-- --- CI --- --}}
+                    <div>
+                        <label for="ci" class="form-label">{{ __('CI:') }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('ci') is-invalid @enderror" id="ci" name="ci" value="{{ old('ci',$usuario->ci) }}" required>
+
+
+                        @error('ci')
+                            <span class="invalid-feedback">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    {{-- -- INPUT TELEFONO -- --}}
 
                     <div class="col-xxl-3 col-md-6">
                         <div>
-                            <label for="teléfono" class="form-label">{{ __('Teléfono:') }} <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('teléfono') is-invalid @enderror" id="teléfono" name="teléfono" value="{{ old('teléfono',$usuario->teléfono) }}" required>
+                            <label for="telefono" class="form-label">{{ __('Telefono:') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('telefono') is-invalid @enderror" id="telefono" name="telefono" value="{{ old('telefono',$usuario->telefono) }}" required>
 
-                            @error('teléfono')
+                            @error('telefono')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
