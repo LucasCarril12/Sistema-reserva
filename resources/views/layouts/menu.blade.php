@@ -105,9 +105,6 @@
 
                 @if(Auth::user()->rol_id == 1)
 
-
-
-
                 {{-- --- ADMIN --- --}}
                 <li class="menu-title"><span>ADMINISTRADOR</span></li>
 
@@ -137,6 +134,14 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('usuarios.index') }}">
                         <i class='bx  bx-gear'></i> <span>Mant. Usuarios</span>
+                    </a>
+                </li>
+
+                {{-- --- EVENTOS --- --}}
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('events.index') }}">
+                        <i class='bx  bx-gear'></i> <span>Eventos</span>
                     </a>
                 </li>
 

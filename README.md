@@ -59,3 +59,17 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+---
+
+## Project notes
+
+- Added resource controllers and routes for `events` and `event_images`.
+- Created `EventController`, `EventImageController`, `EventRequest` and `EventImageRequest` with basic CRUD and image upload handling.
+- Created simple blade views under `resources/views/events` and `resources/views/event_images` for basic management.
+
+Setup reminder:
+
+- Run `php artisan storage:link` to make uploaded images accessible via `storage/`.
+- Uploaded images are stored using `Storage::disk('public')->putFile` under the `events` folder (path saved in `event_images.image_path`).
+

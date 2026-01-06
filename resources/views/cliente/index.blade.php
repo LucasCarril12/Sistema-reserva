@@ -248,6 +248,9 @@ $(document).ready(function () {
     const isMobile = window.matchMedia("(max-width: 430px)").matches;
 
     $('#reservationsTable').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
+        },
         responsive: {
             details: {
                 type: 'column',

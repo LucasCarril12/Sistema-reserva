@@ -1,0 +1,40 @@
+/* VARIABLES DE COLORES */
+:root {
+    --bg-welcome-color: #FFF;
+    --title-color-1: #262C5B;
+    --title-color-2: #404CAC;
+
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+.bg-welcome-color {
+    background-color: var(--bg-welcome-color) !important;
+}
+
+.title-color-1 {
+    color: var(--title-color-1) !important;
+    font-weight: 600;
+}
+
+
+.title-color-2 {
+    color: var(--title-color-2) !important;
+    font-weight: 600;
+}
+
+.danger-color{
+    background-color: var(--danger-color) !important;
+}
+
+
+
+/* ESTILOS DE CAJAS */
+
+.title-style{
+    margin: 5% 0;
+}
