@@ -39,8 +39,12 @@ class RegisteredUserController extends Controller
             'telefono' => ['required', 'string', 'max:15'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],        ], [
-            'ci.digits_between' => 'C.I invalida',        ]);
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'ci.digits_between' => 'C.I invalida',
+            'email.unique' => 'Correo no valido',
+            'password.confirmed' => 'Las contraseñas no coinciden',
+        ]);
 
         //veo si a subido una foto o no
         $fotoPath = null;

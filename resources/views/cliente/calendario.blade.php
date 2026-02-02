@@ -131,6 +131,8 @@
                 <p><strong>Fecha:</strong> ${props.reservation_date || ''} ${props.start_time || ''}</p>
                 <p><strong>Estado:</strong> ${props.reservation_status || ''}</p>
                 <hr>
+                <p><strong>Responsable:</strong> ${detail.nombre_responsable || '—'}</p>
+                <p><strong>C.I:</strong> ${detail.ci || '—'}</p>
                 <p><strong>Email:</strong> ${props.user?.email || detail.email || '—'}</p>
                 <p><strong>Teléfono:</strong> ${detail.telefono || '—'}</p>
                 <p><strong>Teléfono 2:</strong> ${detail.telefono2 || '—'}</p>

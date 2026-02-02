@@ -71,6 +71,13 @@
                                     <button type="button" class="btn btn-sm btn-danger btn-cancel" data-id="{{ $reservation->id }}">Cancelar</button>
                                 @endif
 
+                                {{-- Botón Eliminar permanente --}}
+                                <button type="button" class="btn btn-sm btn-outline-danger ms-1" onclick="confirmDelete({{ $reservation->id }})">Eliminar</button>
+                                <form id="delete-reservation-{{ $reservation->id }}" action="{{ route('reservations.destroy', $reservation->id) }}" method="POST" style="display:none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+
 
 
                             </td>
@@ -241,6 +248,24 @@ $(document).ready(function () {
         order: [[3, 'asc']]
     });
 });
+
+// Confirmar eliminación permanente
+function confirmDelete(reservationId) {
+    Swal.fire({
+        title: '¿Estás seguro de eliminar esta reserva?',
+        text: "Esto eliminará permanentemente la reserva.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-reservation-' + reservationId).submit();
+        }
+    });
+}
 </script>
 
 {{-- ::::::::::: FIN DE BLOQUE MOSTRAR EN MOBIL ::::::::::: --}}

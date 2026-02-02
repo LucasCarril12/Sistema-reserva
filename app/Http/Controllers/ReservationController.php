@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Reservation;
 use App\Models\ReservationDetail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -24,6 +25,12 @@ use Carbon\Carbon;
 class ReservationController extends Controller
 {
     /**
+     * Time slots available for reservations.
+     * Keep in sync with the view select options.
+     */
+    protected $timeSlots = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00'];
+
+    /**
      * Display a listing of the resource.
      */
     public function index(){
@@ -33,10 +40,17 @@ class ReservationController extends Controller
     }
 
     public function indexCliente(){
-        $userId = Auth::user()->id;
-        $reservations = Reservation::where('user_id', $userId)->get();
-        return view('cliente.index',compact('reservations'));
+        $userId = Auth::id();
+
+        $reservations = Reservation::where('user_id', $userId)
+            ->whereIn('reservation_status', ['pendiente', 'confirmada','realizada'])
+            ->with(['detail','user'])
+            ->orderBy('reservation_date', 'desc')
+            ->get();
+
+        return view('cliente.index', compact('reservations'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -92,6 +106,19 @@ class ReservationController extends Controller
             'reservation_status' => 'required|in:pendiente,cancelada,confirmada,realizada',
         ]);
 
+        // Verificar que no haya más de 2 reservas para la misma fecha y hora
+        $existingCount = Reservation::where('reservation_date', $request->reservation_date)
+        ->where('start_time', $request->start_time)
+        ->whereIn('reservation_status', ['pendiente', 'confirmada'])
+        ->count();
+
+        if ($existingCount >= 2) {
+            return back()
+                ->withErrors(['start_time' => 'Horario completo, por favor elija otro horario'])
+                ->withInput();
+        }
+
+
         // Guardar los datos en reservation
         $reservation = Reservation::create([
             'user_id' => $request->user_id ?: null,
@@ -127,6 +154,8 @@ class ReservationController extends Controller
 
     public function storeCliente(Request $request){
         $request->validate([
+            'nombre_responsable' => 'required|string',
+            'ci' => 'required|string',
             'email' => 'nullable|email',
             'telefono' => 'required|string',
             'telefono2' => 'nullable|string',
@@ -146,6 +175,16 @@ class ReservationController extends Controller
             'extranjero' => 'required|string',
             'obs' => 'nullable|string',
         ]);
+
+        // Verificar que no haya más de 2 reservas para la misma fecha y hora
+        $existingCount = Reservation::where('reservation_date', $request->reservation_date)
+            ->where('start_time', $request->start_time)
+            ->where('reservation_status', '!=', 'cancelada')
+            ->count();
+
+        if ($existingCount >= 2) {
+            return back()->withErrors(['start_time' => 'Horario completo, por favor elija otro horario'])->withInput();
+        }
 
         // 🔒 El cliente SIEMPRE es el usuario logueado
         $reservation = Reservation::create([
@@ -224,6 +263,19 @@ class ReservationController extends Controller
 
         $reservation = Reservation::findOrFail($id);
 
+            // 🔒 VALIDAR CUPO DE HORARIO (máx 2)
+        $existingCount = Reservation::where('reservation_date', $request->reservation_date)
+            ->where('start_time', $request->start_time)
+            ->whereIn('reservation_status', ['pendiente', 'confirmada'])
+            ->where('id', '!=', $reservation->id)
+            ->count();
+
+        if ($existingCount >= 2) {
+            return back()
+                ->withErrors(['start_time' => 'Horario completo, por favor elija otro horario'])
+                ->withInput();
+        }
+
         // Actualizar solo los campos de la tabla reservations
         $reservation->update([
             'reservation_date' => $request->reservation_date,
@@ -261,6 +313,23 @@ class ReservationController extends Controller
         }
 
         return redirect()->route('reservations.index')->with('success','Reserva actualizada correctamente');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        // eliminar detalle si existe
+        if ($reservation->detail) {
+            $reservation->detail->delete();
+        }
+
+        $reservation->delete();
+
+        return redirect()->route('reservations.index')->with('success_delete', true);
     }
 
     public function cancel(Request $request){
@@ -341,8 +410,10 @@ class ReservationController extends Controller
 
     public function getAllReservationsCliente(){
         // $reservations = Reservation::where('user_id', Auth::id())->get();
+        // Mostrar solo reservas del usuario que NO estén canceladas
         $reservations = Reservation::with('detail')
         ->where('user_id', Auth::id())
+        ->where('reservation_status', '!=', 'cancelada')
         ->get();
         $events = [];
 
@@ -400,6 +471,65 @@ class ReservationController extends Controller
     }
 
 
+
+    /**
+     * Devuelve la disponibilidad de horas para una fecha dada.
+     * Respuesta JSON: { '08:00': 1, '09:00': 2, ... }
+     */
+    public function availability(Request $request)
+    {
+        $request->validate(['reservation_date' => 'required|date']);
+
+        $date = $request->reservation_date;
+
+        $counts = Reservation::select('start_time', DB::raw('count(*) as total'))
+            ->where('reservation_date', $date)
+            ->where('reservation_status', '!=', 'cancelada')
+            ->groupBy('start_time')
+            ->pluck('total', 'start_time')
+            ->toArray();
+
+        // ensure all timeSlots appear in the response
+        $response = [];
+        foreach ($this->timeSlots as $slot) {
+            $response[$slot] = isset($counts[$slot]) ? (int)$counts[$slot] : 0;
+        }
+
+        return response()->json($response);
+    }
+
+    /**
+     * Devuelve las fechas completamente ocupadas (todos los horarios con 2 reservas).
+     * Respuesta: [ '2026-01-12', '2026-01-15' ]
+     */
+    public function fullyBookedDates()
+    {
+        // Obtener por fecha y hora los conteos
+        $rows = Reservation::select('reservation_date','start_time', DB::raw('count(*) as total'))
+            ->where('reservation_status', '!=', 'cancelada')
+            ->groupBy('reservation_date','start_time')
+            ->get();
+
+        $dates = [];
+
+        // Contabilizar por fecha cuántos horarios están al tope (>=2)
+        $countsPerDate = [];
+        foreach ($rows as $r) {
+            if ($r->total >= 2) {
+                $countsPerDate[$r->reservation_date] = ($countsPerDate[$r->reservation_date] ?? 0) + 1;
+            }
+        }
+
+        $totalSlots = count($this->timeSlots);
+
+        foreach ($countsPerDate as $date => $fullSlots) {
+            if ($fullSlots >= $totalSlots) {
+                $dates[] = $date;
+            }
+        }
+
+        return response()->json($dates);
+    }
 
     private function sendConfirmationEmail(Reservation $reservation)
     {

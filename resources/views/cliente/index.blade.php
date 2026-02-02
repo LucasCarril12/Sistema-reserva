@@ -63,9 +63,6 @@
 
                             {{-- --- Acciones --- --}}
                             <td>
-                                {{-- <button class="btn btn-sm btn-primary btn-delete">Eliminar</button> --}}
-                                <button type="button" class="btn btn-sm btn-primary btn-delete" data-id="{{ $reservation->id }}">Eliminar</button>
-
                                 @if($reservation->reservation_status == 'cancelada')
                                     <button class="btn btn-sm btn-danger btn-cancel" disabled>Cancelar</button>
                                 @else
@@ -200,43 +197,58 @@
         });
 
         // Manejo de botón eliminar (marcar como cancelada y ocultar de la vista del usuario)
-        $('.btn-delete').on('click', function(e) {
-            e.preventDefault();
-            var btn = $(this);
-            var reservationId = btn.data('id');
+        // $('.btn-delete').on('click', function (e) {
+        //     e.preventDefault();
 
-            if (!reservationId) return;
+        //     const btn = $(this);
+        //     const reservationId = btn.data('id');
+        //     const status = btn.data('status');
 
-            Swal.fire({
-                title: '¿Eliminar esta reserva?',
-                text: 'Se marcará como cancelada y se eliminara de tu vista. ¿Continuar?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'No'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '{{ route("reservations.cancel") }}',
-                        method: 'POST',
-                        data: {
-                            reservation_id: reservationId,
-                            cancellation_reason: 'Eliminado por usuario',
-                            _token: '{{ csrf_token() }}'
-                        }
-                    }).done(function(response) {
-                        if (response.success) {
-                            Swal.fire('Eliminada', 'La reserva fue cancelada.', 'success');
-                            btn.closest('tr').fadeOut(300, function() { $(this).remove(); });
-                        } else {
-                            Swal.fire('Error', 'No se pudo eliminar la reserva.', 'error');
-                        }
-                    }).fail(function() {
-                        Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
-                    });
-                }
-            });
-        });
+        //     // 🟢 REALIZADA o CANCELADA → solo eliminar de la vista
+        //     if (status === 'realizada' || status === 'cancelada') {
+        //         btn.closest('tr').fadeOut(300, function () {
+        //             $(this).remove();
+        //         });
+        //         return;
+        //     }
+
+        //     // 🔴 PENDIENTE o CONFIRMADA → cancelar primero
+        //     Swal.fire({
+        //         title: 'Cancelar reserva',
+        //         text: 'Para eliminar esta reserva primero debes cancelarla.',
+        //         input: 'textarea',
+        //         inputPlaceholder: 'Motivo de cancelación',
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonText: 'Sí, cancelar y eliminar',
+        //         cancelButtonText: 'No, mantener reserva',
+        //         preConfirm: (reason) => {
+        //             if (!reason) {
+        //                 Swal.showValidationMessage('Debes ingresar un motivo');
+        //                 return false;
+        //             }
+
+        //             return $.ajax({
+        //                 url: '{{ route("reservations.cancel") }}',
+        //                 method: 'POST',
+        //                 data: {
+        //                     reservation_id: reservationId,
+        //                     cancellation_reason: reason,
+        //                     _token: '{{ csrf_token() }}'
+        //                 }
+        //             });
+        //         }
+        //     }).then(result => {
+        //         if (result.isConfirmed) {
+        //             btn.closest('tr').fadeOut(300, function () {
+        //                 $(this).remove();
+        //             });
+        //         }
+        //     });
+        // });
+
+
+
     });
 </script>
 

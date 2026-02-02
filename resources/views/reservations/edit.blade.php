@@ -52,7 +52,7 @@
                     <div class="col-xxl-3 col-md-6 mt-3">
                         <div>
                             <label for="email" class="form-label">{{ __('Correo Electrónico:') }}<span class="text-danger">*</span></label>
-                            <input type="email" class="form-control " id="email" name="email" placeholder="{{ $reservation->detail->email }}" value="{{ old('email', $reservation->detail->email) }}">
+                            <input type="email" class="form-control " id="email" name="email" placeholder="{{ $reservation->user->email ?? $reservation->detail->email }}" value="{{ old('email', $reservation->user->email ?? $reservation->detail->email) }}">
                         </div>
                     </div>
 
@@ -119,16 +119,16 @@
                         <div>
                             <label for="start_time" class="form-label">{{ __('Hora de inicio:') }} <span class="text-danger">*</span></label>
                             <select class="form-select @error('start_time') is-invalid @enderror" id="start_time" name="start_time" required>
-                                <option value="">{{ $reservation->detail->start_time }}</option>
-                                <option value="08:00" {{ $reservation->start_time == '08:00' ? 'selected' : '' }}>08:00</option>
-                                <option value="09:00" {{ $reservation->start_time == '09:00' ? 'selected' : '' }}>09:00</option>
-                                <option value="10:00" {{ $reservation->start_time == '10:00' ? 'selected' : '' }}>10:00</option>
-                                <option value="11:00" {{ $reservation->start_time == '11:00' ? 'selected' : '' }}>11:00</option>
-                                <option value="12:00" {{ $reservation->start_time == '12:00' ? 'selected' : '' }}>12:00</option>
-                                <option value="13:00" {{ $reservation->start_time == '13:00' ? 'selected' : '' }}>13:00</option>
-                                <option value="14:00" {{ $reservation->start_time == '14:00' ? 'selected' : '' }}>14:00</option>
-                                <option value="15:00" {{ $reservation->start_time == '15:00' ? 'selected' : '' }}>15:00</option>
-                                <option value="16:00" {{ $reservation->start_time == '16:00' ? 'selected' : '' }}>16:00</option>
+                                <option value="">{{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) }}</option>
+                                <option value="08:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '08:00' ? 'selected' : '' }}>08:00</option>
+                                <option value="09:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '09:00' ? 'selected' : '' }}>09:00</option>
+                                <option value="10:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '10:00' ? 'selected' : '' }}>10:00</option>
+                                <option value="11:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '11:00' ? 'selected' : '' }}>11:00</option>
+                                <option value="12:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '12:00' ? 'selected' : '' }}>12:00</option>
+                                <option value="13:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '13:00' ? 'selected' : '' }}>13:00</option>
+                                <option value="14:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '14:00' ? 'selected' : '' }}>14:00</option>
+                                <option value="15:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '15:00' ? 'selected' : '' }}>15:00</option>
+                                <option value="16:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '16:00' ? 'selected' : '' }}>16:00</option>
                             </select>
                             @error('start_time')
                                 <span class="invalid-feedback" role="alert">
@@ -194,9 +194,9 @@
                         <div>
                             <label for="extranjero" class="form-label">{{ __('¿Son extranjeros?:') }} <span class="text-danger">*</span></label>
                             <select class="form-select" id="extranjero" name="extranjero" required>
-                                <option value="">{{ $reservation->detail->extranjero }}</option>
-                                <option value="Si"{{ $reservation->detail->extranjero == 'Si' ? 'selected' : '' }}>Si</option>
-                                <option value="No"{{ $reservation->detail->extranjero == 'No' ? 'selected' : '' }}>No</option>
+                                <option value="">{{ old('extranjero', $reservation->detail->extranjero) }}</option>
+                                <option value="Si" {{ old('extranjero', $reservation->detail->extranjero) == 'Si' ? 'selected' : '' }}>Si</option>
+                                <option value="No" {{ old('extranjero', $reservation->detail->extranjero) == 'No' ? 'selected' : '' }}>No</option>
                             </select>
                         </div>
                     </div>

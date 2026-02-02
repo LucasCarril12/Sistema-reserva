@@ -169,6 +169,10 @@
                                 <option value="15:00">15:00</option>
                                 <option value="16:00">16:00</option>
                             </select>
+                            <p id="timeMessage" class="text-danger mt-1"></p>
+                            <div id="timeLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" style="vertical-align: middle;">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
                             @error('start_time')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -274,7 +278,10 @@
                         <div>
                             <br>
                             <a href="{{ route('reservations.index') }}" class="btn btn-danger"> {{ __('Cancelar')}} </a>
-                            <button type="submit" class="btn btn-success">{{ __('Guardar Reserva')}}</button>
+                            <button id="submitBtn" type="submit" class="btn btn-success">{{ __('Guardar Reserva')}}</button>
+                            <div id="formLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" style="vertical-align: middle;">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
                         </div>
                     </div>
 
@@ -296,39 +303,143 @@
 </script>
 
 <script>
-    // Obtener fecha mínima (hoy + 10 días)
-    const today = new Date();
-    const minDate = new Date();
-    minDate.setDate(today.getDate() + 9);
+    document.addEventListener('DOMContentLoaded', function () {
 
-    // Formatear YYYY-MM-DD
-    const formatDate = (date) => {
-        return date.toISOString().split('T')[0];
-    };
+        const dateInput   = document.getElementById('reservation_date');
+        const timeSelect  = document.getElementById('start_time');
+        const submitBtn   = document.getElementById('submitBtn');
+        const timeLoader  = document.getElementById('timeLoader');
 
-    const input = document.getElementById('reservation_date');
-    input.setAttribute('min', formatDate(minDate));
-
-    // Validar cuando el usuario cambie la fecha
-    input.addEventListener('change', function () {
-        const selected = new Date(this.value);
-        const day = selected.getDay(); // 0 = Domingo, 6 = Sábado
-
-        // 1. Verificar si es antes del mínimo
-        if (selected < minDate) {
-            alert(`Debes elegir una fecha a partir del ${formatDate(minDate)}`);
-            this.value = "";
-            return;
+        // Mensaje debajo del select
+        let timeMessage = document.getElementById('timeMessage');
+        if(!timeMessage){
+            timeMessage = document.createElement('p');
+            timeMessage.id = 'timeMessage';
+            timeMessage.className = 'text-danger mt-1';
+            timeSelect.parentNode.appendChild(timeMessage);
         }
 
-        // 2. Bloquear sábados y domingos
-        if (day === 5 || day === 6) {
-            alert("No se permiten reservas los fines de semana.");
-            this.value = "";
-            return;
+        // ===== FECHA MÍNIMA (HOY + 10 DÍAS) =====
+        const today = new Date();
+        const minDate = new Date();
+        minDate.setDate(today.getDate() + 9);
+
+        const formatDate = (date) => date.toISOString().split('T')[0];
+        dateInput.setAttribute('min', formatDate(minDate));
+
+        // ===== CAMBIO DE FECHA =====
+        dateInput.addEventListener('change', function () {
+
+            const selectedDate = new Date(this.value);
+            const day = selectedDate.getDay(); // 0 dom, 6 sab
+
+            // Reset UI
+            submitBtn.disabled = true;
+            timeSelect.value = '';
+            timeMessage.innerText = '';
+
+            // Fecha mínima
+            if (selectedDate < minDate) {
+                Swal.fire('Fecha inválida', 'Debes elegir una fecha válida.', 'warning');
+                this.value = '';
+                return;
+            }
+
+            // Fin de semana
+            if (day === 6 || day === 0) {
+                Swal.fire('Día inválido', 'No se permiten reservas los fines de semana.', 'warning');
+                this.value = '';
+                return;
+            }
+
+            // Loader
+            timeSelect.disabled = true;
+            timeLoader.classList.remove('d-none');
+
+            // ===== FETCH DISPONIBILIDAD =====
+            fetch(`{{ route('reservations.availability') }}?reservation_date=${this.value}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                let allDisabled = true;
+
+                Array.from(timeSelect.options).forEach(opt => {
+                    if(opt.value === '') return;
+
+                    const count = data[opt.value] ?? 0;
+
+                    if(count >= 2){
+                        opt.disabled = true;
+                        opt.text = `${opt.value} (completo)`;
+                        opt.classList.add('full-slot');
+                    } else {
+                        opt.disabled = false;
+                        opt.text = opt.value;
+                        opt.classList.remove('full-slot');
+                        allDisabled = false;
+                    }
+                });
+
+                if(allDisabled){
+                    Swal.fire(
+                        'Día completo',
+                        'Todos los horarios están ocupados. Elegí otra fecha.',
+                        'info'
+                    );
+                    dateInput.value = '';
+                }
+
+            })
+            .catch(() => {
+                Swal.fire('Error', 'No se pudo verificar la disponibilidad.', 'error');
+            })
+            .finally(() => {
+                timeSelect.disabled = false;
+                timeLoader.classList.add('d-none');
+            });
+        });
+
+        // ===== CAMBIO DE HORA =====
+        timeSelect.addEventListener('change', function () {
+
+            const opt = this.options[this.selectedIndex];
+
+            if(opt && opt.disabled){
+                submitBtn.disabled = true;
+                timeMessage.innerText = 'Este horario ya alcanzó el máximo de 2 reservas.';
+                this.value = '';
+            } else if(this.value !== '') {
+                submitBtn.disabled = false;
+                timeMessage.innerText = '';
+            }
+        });
+
+        // ===== PREVENIR ENVÍOS DOBLES =====
+        const form = document.getElementById('reservationForm');
+        const formLoader = document.getElementById('formLoader');
+
+        form.addEventListener('submit', function () {
+            submitBtn.disabled = true;
+            formLoader.classList.remove('d-none');
+        });
+
+        // ===== REAPLICAR SI VIENE CON OLD() =====
+        if(dateInput.value){
+            dateInput.dispatchEvent(new Event('change'));
         }
+
     });
-</script>
+    </script>
+
+    <style>
+    option.full-slot {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+</style>
+
 
 <script>
     (function(){
@@ -372,6 +483,7 @@
         });
     })();
 </script>
+
 <script>
 (function(){
     const form = document.getElementById('reservationForm');

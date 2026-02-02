@@ -122,7 +122,12 @@
 
                                 <div class="mb-3">
                                     <label class="form-label" for="password-confirm">{{ __('Confirmar contraseña:') }} <span class="text-danger">*</span></label>
-                                    <input type="password" id="password-confirm" name="password_confirmation" class="form-control" placeholder="Confirme la contraseña" required>
+                                    <input type="password" id="password-confirm" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Confirme la contraseña" required>
+                                    @error('password_confirmation')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
 
                                 {{-- --- BOTON --- --}}

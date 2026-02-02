@@ -77,6 +77,19 @@
                         </div>
                     </div>
 
+                    {{-- :::: C.I :::: --}}
+                    <div class="col-xxl-3 col-md-6 mt-3">
+                        <div>
+                            <label for="ci" class="form-label">{{ __('Cédula de Identidad (C.I):') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('ci') is-invalid @enderror" id="ci" name="ci" placeholder="Ej: 12345678" value="{{ old('ci') }}" required>
+                            @error('ci')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <p style="color: #767676; font-size: 18px; font-weight:600; margin-top: 1rem;">Datos Institución:</p>
 
                     {{-- :::: NOMBRE INSTITUCION :::: --}}
@@ -135,6 +148,9 @@
                                 <option value="15:00">15:00</option>
                                 <option value="16:00">16:00</option>
                             </select>
+                            <div id="timeLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" style="vertical-align: middle;">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
                             @error('start_time')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -226,7 +242,10 @@
                         <div>
                             <br>
                             <a href="{{ route('reservations.index') }}" class="btn btn-danger"> {{ __('Cancelar')}} </a>
-                            <button type="submit" class="btn btn-success">{{ __('Guardar Reserva')}}</button>
+                            <button id="submitBtn" type="submit" class="btn btn-success">{{ __('Guardar Reserva')}}</button>
+                            <div id="formLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" style="vertical-align: middle;">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
                         </div>
                     </div>
 
@@ -268,95 +287,260 @@
 
         // 1. Verificar si es antes del mínimo
         if (selected < minDate) {
-            alert(`Debes elegir una fecha a partir del ${formatDate(minDate)}`);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Fecha inválida',
+                text: `Debes elegir una fecha a partir del ${formatDate(minDate)}`,
+                showClass: { popup: 'animate__animated animate__fadeInDown' },
+                hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+            });
             this.value = "";
             return;
         }
 
         // 2. Bloquear sábados y domingos
-        if (day === 5 || day === 6) {
-            alert("No se permiten reservas los fines de semana.");
+        if (day === 6 || day === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Día inválido',
+                text: 'No se permiten reservas los fines de semana.',
+                showClass: { popup: 'animate__animated animate__shakeX' },
+                hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+            });
             this.value = "";
             return;
         }
-    });
-</script>
 
-<script>
-    (function(){
-        const userSearch = document.getElementById('user_search');
-        const userIdInput = document.getElementById('user_id');
-        const emailInput = document.getElementById('email');
+        // 3. Consultar disponibilidad por fecha y deshabilitar horas llenas
+        fetch(`{{ route('reservations.availability') }}?reservation_date=${this.value}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('start_time');
+            let allDisabled = true;
 
-        if(!userSearch) return;
+            Array.from(select.options).forEach(function(opt){
+                if(opt.value === '') return;
+                const cnt = data[opt.value] ?? 0;
+                if(cnt >= 2){
+                    // set attribute to ensure disabled for all browsers
+                    opt.setAttribute('disabled','disabled');
+                    opt.disabled = true;
 
-        const sync = function(){
-            const val = userSearch.value;
-            const options = document.querySelectorAll('#users_list option');
-            let found = false;
+                    // Añadir texto indicando que está completo
+                    opt.text = opt.value + ' (completo)';
 
-            options.forEach(function(opt){
-                if(opt.value === val){
-                    userIdInput.value = opt.dataset.id || '';
-                    if(emailInput){
-                        emailInput.value = opt.dataset.email || '';
-                        emailInput.readOnly = true;
+                    // añadir estilo para dejar en rojo claro y marcar visualmente
+                    opt.classList.add('full-slot');
+                    opt.style.backgroundColor = '#f8d7da';
+                    opt.style.color = '#721c24';
+
+                    // accesibilidad y tooltip
+                    opt.title = 'Horario completo';
+                    opt.setAttribute('aria-disabled','true');
+
+                    // si la opción estaba seleccionada, limpiar selección y notificar
+                    if(select.value === opt.value){
+                        select.value = '';
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Horario no disponible',
+                            text: 'La hora seleccionada ya no está disponible. Por favor selecciona otra hora.',
+                            showClass: { popup: 'animate__animated animate__fadeInDown' },
+                            hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+                        });
                     }
-                    found = true;
+                } else {
+                    opt.removeAttribute('disabled');
+                    opt.disabled = false;
+                    opt.text = opt.value;
+                    // remover estilos si estaba marcado
+                    opt.classList.remove('full-slot');
+                    opt.style.backgroundColor = '';
+                    opt.style.color = '';
+                    opt.title = '';
+                    opt.removeAttribute('aria-disabled');
+                    allDisabled = false;
                 }
             });
 
-            if(!found){
-                userIdInput.value = '';
-                if(emailInput){
-                    // keep whatever value user typed/wants, but allow editing
-                    emailInput.readOnly = false;
-                }
+            // prevenir selección de opciones deshabilitadas (algunos navegadores permiten seleccionarlas por teclado)
+            const startSelect = document.getElementById('start_time');
+            if(startSelect){
+                startSelect.addEventListener('change', function(){
+                    const selOpt = this.options[this.selectedIndex];
+                    if(selOpt && selOpt.disabled){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Horario no válido',
+                            text: 'No puedes seleccionar un horario completo. Por favor elige otro.',
+                            showClass: { popup: 'animate__animated animate__shakeX' },
+                            hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+                        });
+                        this.value = '';
+                    }
+                });
             }
-        };
 
-        userSearch.addEventListener('input', sync);
-        userSearch.addEventListener('blur', sync);
+            if(allDisabled){
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Día completo',
+                    text: 'El día seleccionado está completo. Por favor elige otra fecha.',
+                    showClass: { popup: 'animate__animated animate__zoomIn' },
+                    hideClass: { popup: 'animate__animated animate__zoomOut' }
+                });
+                input.value = '';
+            } else {
+                // limpiar selección previa de hora
+                document.getElementById('start_time').value = '';
+            }
+        })
 
-        // Sync on page load in case of validation errors (old values)
-        window.addEventListener('DOMContentLoaded', function(){
-            sync();
+    .catch(err => {
+            console.error('Error obteniendo disponibilidad', err);
+        });
+    });
+
+    // Si hay una fecha cargada (por old() o recarga), actualizar la disponibilidad inmediatamente
+    if (input.value) {
+        input.dispatchEvent(new Event('change'));
+    }
+
+    // añadir estilo global para opciones completas en caso que el navegador lo soporte
+    (function(){
+        const style = document.createElement('style');
+        style.innerHTML = `
+            option.full-slot { background-color: #f8d7da; color: #721c24; }
+        `;
+        document.head.appendChild(style);
+    })();
+
+    // mostrar loader en submit y prevenir envíos dobles
+    (function(){
+        const form = document.getElementById('reservationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formLoader = document.getElementById('formLoader');
+        if(!form) return;
+        form.addEventListener('submit', function () {
+            if(submitBtn) { submitBtn.disabled = true; submitBtn.classList.add('disabled'); }
+            if(formLoader) formLoader.classList.remove('d-none');
         });
     })();
 </script>
+
 <script>
-(function(){
-    const form = document.getElementById('reservationForm');
-    const userSearch = document.getElementById('user_search');
-    const userIdInput = document.getElementById('user_id');
-    const emailInput = document.getElementById('email');
+document.addEventListener('DOMContentLoaded', () => {
 
-    if(!form || !userSearch) return;
+    const dateInput   = document.getElementById('reservation_date');
+    const timeSelect  = document.getElementById('start_time');
+    const submitBtn   = document.getElementById('submitBtn');
+    const loader      = document.getElementById('formLoader');
 
-    form.addEventListener('submit', function () {
-        const val = userSearch.value;
-        const options = document.querySelectorAll('#users_list option');
-        let found = false;
+    // --- CONFIG ---
+    const MAX_PER_SLOT = 2;
 
-        options.forEach(opt => {
-            if (opt.value === val) {
-                userIdInput.value = opt.dataset.id || '';
-                if(emailInput){
-                    emailInput.value = opt.dataset.email || '';
-                    emailInput.readOnly = true;
-                }
-                found = true;
-            }
-        });
+    // --- FECHA MÍNIMA (HOY + 9) ---
+    const today = new Date();
+    const minDate = new Date();
+    minDate.setDate(today.getDate() + 9);
 
-        if(!found){
-            userIdInput.value = '';
-            if(emailInput){
-                emailInput.readOnly = false;
-            }
+    const formatDate = d => d.toISOString().split('T')[0];
+    dateInput.min = formatDate(minDate);
+
+    // --- DESHABILITAR SUBMIT POR DEFECTO ---
+    submitBtn.disabled = true;
+
+    // --- CUANDO CAMBIA LA FECHA ---
+    dateInput.addEventListener('change', async function () {
+
+        submitBtn.disabled = true;
+        timeSelect.value = '';
+
+        const selected = new Date(this.value);
+        const day = selected.getDay(); // 0 dom - 6 sab
+
+        // ❌ fecha inválida
+        if (selected < minDate) {
+            Swal.fire('Fecha inválida', 'Elegí una fecha válida', 'warning');
+            this.value = '';
+            return;
         }
+
+        // ❌ fines de semana (sábado/domingo)
+        if (day === 0 || day === 6) {
+            Swal.fire('Día no disponible', 'No se permiten reservas fines de semana', 'warning');
+            this.value = '';
+            return;
+        }
+
+        // 🔄 loader
+        timeSelect.disabled = true;
+
+        try {
+            const res = await fetch(`{{ route('reservations.availability') }}?reservation_date=${this.value}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            const data = await res.json();
+            let allFull = true;
+
+            [...timeSelect.options].forEach(opt => {
+                if (!opt.value) return;
+
+                const count = data[opt.value] ?? 0;
+
+                if (count >= MAX_PER_SLOT) {
+                    opt.disabled = true;
+                    opt.text = `${opt.value} (completo)`;
+                    opt.classList.add('full-slot');
+                } else {
+                    opt.disabled = false;
+                    opt.text = opt.value;
+                    opt.classList.remove('full-slot');
+                    allFull = false;
+                }
+            });
+
+            if (allFull) {
+                Swal.fire('Día completo', 'No hay horarios disponibles', 'info');
+                dateInput.value = '';
+            }
+
+        } catch (e) {
+            console.error(e);
+            Swal.fire('Error', 'No se pudo validar disponibilidad', 'error');
+        }
+
+        timeSelect.disabled = false;
     });
-})();
+
+    // --- CUANDO CAMBIA LA HORA ---
+    timeSelect.addEventListener('change', function () {
+        const opt = this.options[this.selectedIndex];
+
+        if (!opt || opt.disabled) {
+            submitBtn.disabled = true;
+            return;
+        }
+
+        submitBtn.disabled = false;
+    });
+
+    // --- SUBMIT ---
+    document.getElementById('reservationForm').addEventListener('submit', () => {
+        submitBtn.disabled = true;
+        loader.classList.remove('d-none');
+    });
+
+});
 </script>
 
+<style>
+option.full-slot {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+</style>
 @endpush

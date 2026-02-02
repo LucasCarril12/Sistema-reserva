@@ -65,4 +65,13 @@ Route::get('cliente/reserva', [ReservationController::class, 'createCliente'])
 Route::post('cliente/reserva', [ReservationController::class, 'storeCliente'])
     ->name('cliente.reserva.store');
 
+// Disponibilidad por fecha y días completamente ocupados
+Route::get('reservations/availability', [ReservationController::class, 'availability'])
+    ->name('reservations.availability')
+    ->middleware('auth');
+
+Route::get('reservations/fully-booked-dates', [ReservationController::class, 'fullyBookedDates'])
+    ->name('reservations.fully_booked')
+    ->middleware('auth');
+
 require __DIR__.'/auth.php';

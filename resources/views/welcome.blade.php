@@ -37,7 +37,7 @@
             <div class="container">
                 <a class="navbar-brand" href="index.html">
                     <img src="{{ asset('assets/images/logo-mujer-alada-blanca.png') }}" class="card-logo card-logo-dark" alt="logo dark" height="50">
-                    <img src="{{ asset('assets/images/logo-mujer-alada-blanca.png') }}" class="card-logo card-logo-light" alt="logo light" height="50">
+                    <img src="{{ asset('assets/images/favicon.png') }}" class="card-logo card-logo-light" alt="logo light" height="50">
                 </a>
 
                 <div class="collapse navbar-collapse " id="navbarSupportedContent">
@@ -84,9 +84,7 @@
                             @endauth
                         </nav>
                     @endif
-
                 </div>
-
             </div>
         </nav>
         <!-- end navbar -->
@@ -99,28 +97,45 @@
         <!-- start wallet -->
         <section class="section" id="wallet">
             <div class="container">
-                <div class="row align-items-center justify-center">
-                    <div class="col-sm-8">
-                        <div class="card card-body text-start">
-                            <h5 class="fs-5 title-color-1">Museo Aeronáutico “Coronel (Aviador) Jaime Meregalli</h5>
-                            <p class="fs-14 lh-base w-75">
-                                Es un espacio dedicado a la difusión del patrimonio aeronáutico nacional.<br>
-                                A través de un recorrido por sus instalaciones, invita a conocer la historia
-                                y evolución de la aeronáutica y la astronáutica en nuestro país,
-                                ofreciendo una experiencia educativa y enriquecedora para todo público.
-                            </p>
+                <div class="title-inicio">
+                    <div>
+                        <h4>DOMINGO</h4>
+                        <p>13:00 a 17:00 hrs</p>
+                    </div>
+                </div>
+                <div class="parent">
+                    <div class="carrusel-1-grid">
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                            <div class="carousel-item active">
+                            <img class="d-block w-100" src="assets/images/inicio/SalaCivil.png" alt="First slide">
+                            </div>
+                            <div class="carousel-item">
+                            <img class="d-block w-100" src="assets/images/inicio/SalaEspacial.png" alt="Second slide">
+                            </div>
+                            <div class="carousel-item">
+                            <img class="d-block w-100" src="assets/images/inicio/SalaMilitar.png" alt="Third slide">
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                         </div>
                     </div>
-
-                    <div class="col-xxl-4 col-lg-6">
-                        <div class="card card-body text-center box-style">
-                            <h5 class="card-title fs-4 title-color-1">Horario</h5>
-                            <p class="card-text fs-14"> <strong>Todos los domingos</strong> <br>de 13:00 a 17:00 hs.</p>
-                            <p class="card-text fs-12">Para visitas guiadas de <strong>lunes a viernes</strong> de<br> <strong>8:00 a 16:00</strong>, con coordinación previa.</p>
-
-                        </div>
-                    </div><!-- end col -->
-
+                    <div class="carrusel-2-grid"> </div>
+                    <div class="carrusel-3-grid"> </div>
+                    <div class="carrusel-4-grid"> </div>
+                    <div class="carrusel-5-grid"> </div>
+                    <div class="carrusel-6-grid"> </div>
+                    <div class="carrusel-7-grid"> </div>
+                    <div class="carrusel-8-grid"> </div>
+                    <div class="carrusel-9-grid"> </div>
+                    <div class="carrusel-10-grid"> </div>
                 </div>
 
                 <div class="col g-4">
@@ -1023,6 +1038,32 @@
     <script src="assets/libs/swiper/swiper-bundle.min.js"></script>
 
     <script src="assets/js/pages/nft-landing.init.js"></script>
+
+    <script>
+        // Cambiar logo en navbar al hacer scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            const logoDark = document.querySelector('.card-logo-dark');
+            const logoLight = document.querySelector('.card-logo-light');
+
+            if (window.scrollY > 50) {
+                // Al hacer scroll, mostrar logo light (favicon)
+                logoDark.style.display = 'none';
+                logoLight.style.display = 'inline';
+                navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+            } else {
+                // Sin scroll, mostrar logo dark (mujer alada)
+                logoDark.style.display = 'inline';
+                logoLight.style.display = 'none';
+                navbar.style.backgroundColor = 'transparent';
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

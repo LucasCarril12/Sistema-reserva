@@ -26,8 +26,11 @@
                     <h4 class="card-title mb-0 flex-grow-1">Calendario de Reservas</h4>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body position-relative">
                 <div id="calendar"></div>
+                <div id="calendarLoader" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(255,255,255,0.8); z-index:1000; display:none;">
+                    <div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div>
+                </div>
 
                 <!-- Modal para detalles de reserva -->
                 <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
@@ -51,6 +54,10 @@
             </div>
 
             <style>
+                #calendar {
+                    min-height: 700px;
+                }
+
                 .fc-plus-btn{
                     position: relative;
                     top: -4px;
@@ -67,91 +74,141 @@
 
 @endsection
 
+
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
+document.addEventListener('DOMContentLoaded', function () {
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'es',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            buttonText: {
-                today: 'Hoy',
-                month: 'Mes',
-                week: 'Semana',
-                day: 'Día'
-            },
-            events: '{{ route("administrador.fullcalendar") }}',
+    const calendarEl = document.getElementById('calendar');
+    const loader = document.getElementById('calendarLoader');
 
-            eventDidMount: function(info) {
-                if(info.event.backgroundColor) {
-                    info.el.style.backgroundColor = info.event.backgroundColor;
-                }
-                if(info.event.borderColor) {
-                    info.el.style.borderColor = info.event.borderColor;
-                }
+    if (!calendarEl) return;
 
-                // Agregar botón + dentro del evento
-                var plusBtn = document.createElement('button');
-                plusBtn.type = 'button';
-                plusBtn.className = 'btn btn-sm btn-light fc-plus-btn';
-                plusBtn.innerText = '+';
-                plusBtn.style.marginLeft = '6px';
-                plusBtn.addEventListener('click', function(e){
-                    e.stopPropagation(); // evitar que dispare eventClick del calendario
-                    showReservationDetails(info.event);
-                });
+    if (loader) loader.style.display = 'flex';
 
-                // insertar el botón al final del elemento de evento
-                // FullCalendar estructura el contenido dentro de info.el
-                info.el.appendChild(plusBtn);
-            },
+    // =========================
+    // INICIALIZAR CALENDARIO
+    // =========================
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
 
-            eventClick: function(info){
-                // También abrir modal si se hace click en el evento
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día'
+        },
+
+        // 👉 FullCalendar maneja los eventos
+        events: {
+            url: '{{ route("administrador.fullcalendar") }}',
+            failure: function () {
+                console.error('Error cargando eventos del calendario');
+                alert('No se pudieron cargar las reservas.');
+            }
+        },
+
+        eventDidMount: function (info) {
+            if (info.event.backgroundColor) {
+                info.el.style.backgroundColor = info.event.backgroundColor;
+            }
+            if (info.event.borderColor) {
+                info.el.style.borderColor = info.event.borderColor;
+            }
+
+            // Botón +
+            const plusBtn = document.createElement('button');
+            plusBtn.type = 'button';
+            plusBtn.className = 'btn btn-sm btn-light fc-plus-btn';
+            plusBtn.innerText = '+';
+            plusBtn.style.marginLeft = '6px';
+
+            plusBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
                 showReservationDetails(info.event);
-            }
+            });
 
+            info.el.appendChild(plusBtn);
+        },
+
+        eventClick: function (info) {
+            showReservationDetails(info.event);
+        }
+    });
+
+    // 👉 Renderizar SIEMPRE
+    calendar.render();
+
+    // 👉 Apagar loader apenas renderiza
+    if (loader) loader.style.display = 'none';
+
+    // =========================
+    // CARGAR DÍAS COMPLETOS (NO BLOQUEANTE)
+    // =========================
+    fetch('{{ route("reservations.fully_booked") }}', {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.ok ? res.json() : [])
+    .then(dates => {
+        if (!Array.isArray(dates)) return;
+
+        dates.forEach(date => {
+            calendar.addEvent({
+                start: date,
+                allDay: true,
+                display: 'background',
+                backgroundColor: '#6c757d',
+                borderColor: '#6c757d',
+                title: 'Completo'
+            });
         });
+    })
+    .catch(err => {
+        console.warn('No se pudieron cargar los días completos', err);
+    });
 
-        calendar.render();
+    // =========================
+    // MODAL
+    // =========================
+    function showReservationDetails(event) {
+        const props = event.extendedProps || {};
+        const detail = props.detail || {};
+        const modalEl = document.getElementById('reservationModal');
 
-        // Función para popular y mostrar modal con detalles
-        function showReservationDetails(event){
-            var props = event.extendedProps || {};
-            var detail = props.detail || {};
-            var modalEl = document.getElementById('reservationModal');
-            modalEl.querySelector('.modal-title').innerText = props.institucion || event.title;
-            var body = modalEl.querySelector('.modal-body');
-            body.innerHTML = `
-                <p><strong>Fecha:</strong> ${props.reservation_date || ''} ${props.start_time || ''}</p>
-                <p><strong>Estado:</strong> ${props.reservation_status || ''}</p>
-                <hr>
-                <p><strong>Responsable:</strong> ${detail.nombre_responsable || '—'}</p>
-                <p><strong>C.I:</strong> ${detail.ci || '—'}</p>
-                <p><strong>Email:</strong> ${detail.email || '—'}</p>
-                <p><strong>Teléfono:</strong> ${detail.telefono || '—'}</p>
-                <p><strong>Teléfono 2:</strong> ${detail.telefono2 || '—'}</p>
-                <p><strong>Sala:</strong> ${detail.sala || '—'}</p>
-                <p><strong>Total adultos:</strong> ${detail.total_adultos ?? '—'}</p>
-                <p><strong>Total niños:</strong> ${detail.total_ninios ?? '—'}</p>
-                <p><strong>Dirección:</strong> ${detail.direccion || '—'}</p>
-                <p><strong>Observaciones:</strong> ${detail.obs || '—'}</p>
-            `;
-            var editLink = modalEl.querySelector('#openReservationEdit');
-            if(editLink){
-                editLink.href = '/reservations/' + event.id + '/edit';
-            }
-            var bsModal = new bootstrap.Modal(modalEl);
-            bsModal.show();
+        modalEl.querySelector('.modal-title').innerText =
+            props.institucion || event.title;
+
+        modalEl.querySelector('.modal-body').innerHTML = `
+            <p><strong>Fecha:</strong> ${props.reservation_date || ''} ${props.start_time || ''}</p>
+            <p><strong>Estado:</strong> ${props.reservation_status || ''}</p>
+            <hr>
+            <p><strong>Responsable:</strong> ${detail.nombre_responsable || '—'}</p>
+            <p><strong>C.I:</strong> ${detail.ci || '—'}</p>
+            <p><strong>Email:</strong> ${detail.email || '—'}</p>
+            <p><strong>Teléfono:</strong> ${detail.telefono || '—'}</p>
+            <p><strong>Teléfono 2:</strong> ${detail.telefono2 || '—'}</p>
+            <p><strong>Sala:</strong> ${detail.sala || '—'}</p>
+            <p><strong>Total adultos:</strong> ${detail.total_adultos ?? '—'}</p>
+            <p><strong>Total niños:</strong> ${detail.total_ninios ?? '—'}</p>
+            <p><strong>Dirección:</strong> ${detail.direccion || '—'}</p>
+            <p><strong>Observaciones:</strong> ${detail.obs || '—'}</p>
+        `;
+
+        const editLink = modalEl.querySelector('#openReservationEdit');
+        if (editLink) {
+            editLink.href = '/reservations/' + event.id + '/edit';
         }
 
-        calendar.render();
-    });
+        new bootstrap.Modal(modalEl).show();
+    }
+
+});
 </script>
 @endpush
