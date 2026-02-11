@@ -151,7 +151,6 @@
             bsModal.show();
         }
 
-        calendar.render();
     });
 </script>
 @endpush

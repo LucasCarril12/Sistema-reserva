@@ -82,72 +82,41 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const loader = document.getElementById('calendarLoader');
 
+    // Helper para controlar loading desde nuestro código
+    function setLoading(val){
+        if (loader) loader.style.display = val ? 'flex' : 'none';
+        try {
+            if (calendar && typeof calendar.setLoading === 'function') calendar.setLoading(val);
+        } catch(e){}
+    }
+
     if (!calendarEl) return;
-
-    if (loader) loader.style.display = 'flex';
-
     // =========================
-    // INICIALIZAR CALENDARIO
+    // INICIALIZAR CALENDARIO (MÍNIMO - evitar DOM mutations en eventDidMount)
     // =========================
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'es',
-
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-
-        buttonText: {
-            today: 'Hoy',
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día'
-        },
-
-        // 👉 FullCalendar maneja los eventos
-        events: {
-            url: '{{ route("administrador.fullcalendar") }}',
-            failure: function () {
-                console.error('Error cargando eventos del calendario');
-                alert('No se pudieron cargar las reservas.');
-            }
-        },
-
-        eventDidMount: function (info) {
-            if (info.event.backgroundColor) {
-                info.el.style.backgroundColor = info.event.backgroundColor;
-            }
-            if (info.event.borderColor) {
-                info.el.style.borderColor = info.event.borderColor;
-            }
-
-            // Botón +
-            const plusBtn = document.createElement('button');
-            plusBtn.type = 'button';
-            plusBtn.className = 'btn btn-sm btn-light fc-plus-btn';
-            plusBtn.innerText = '+';
-            plusBtn.style.marginLeft = '6px';
-
-            plusBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                showReservationDetails(info.event);
-            });
-
-            info.el.appendChild(plusBtn);
-        },
-
-        eventClick: function (info) {
-            showReservationDetails(info.event);
-        }
+        events: '{{ route("administrador.fullcalendar") }}',
     });
 
-    // 👉 Renderizar SIEMPRE
+    // Nota: los bloques que manipulaban el DOM en eventDidMount y manejaban eventClick
+    // provocaban renderizados recursivos y múltiples mutaciones. Se comentan abajo
+    // para referencia, pero no se ejecutan.
+    /*
+    eventDidMount: function (info) {
+        // TODO: Este bloque estaba agregando botones al DOM por cada evento y
+        // era re-ejecutado en cada re-render. Dejado comentado para evitar loops.
+    },
+
+    eventClick: function (info) {
+        // showReservationDetails(info.event);
+    }
+    */
+
+    // Renderizar
     calendar.render();
 
-    // 👉 Apagar loader apenas renderiza
-    if (loader) loader.style.display = 'none';
 
     // =========================
     // CARGAR DÍAS COMPLETOS (NO BLOQUEANTE)

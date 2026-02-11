@@ -14,9 +14,10 @@ class User extends Authenticatable
     //Relacionamos manualmnente con la tabla de la base de datos, esto sirve para poder evitar problemas si hay alguna letra de mas en el nombre
     protected $table = 'users';
 
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-    use SoftDeletes;
+    /**
+     * Laravel model traits
+     */
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -30,12 +31,9 @@ class User extends Authenticatable
     protected $fillable = [
         'nombres',
         'apellidos',
-        'ci',
         'telefono',
         'email',
         'foto',
-        'password',
-        'rol_id',
     ];
 
     /**
@@ -56,13 +54,15 @@ class User extends Authenticatable
      * @return array<string, string>
      */
 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string,string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     //RELACIONES CON OTROS MODELOS
 

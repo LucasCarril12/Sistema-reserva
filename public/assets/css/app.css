@@ -2174,10 +2174,10 @@ File: Main Css File
 
 /*!
  * Waves v0.7.6
- * http://fian.my.id/Waves 
- * 
- * Copyright 2014-2018 Alfiana E. Sibuea and other contributors 
- * Released under the MIT license 
+ * http://fian.my.id/Waves
+ *
+ * Copyright 2014-2018 Alfiana E. Sibuea and other contributors
+ * Released under the MIT license
  * https://github.com/fians/Waves/blob/master/LICENSE */
 .waves-effect {
   position: relative;
@@ -15326,7 +15326,7 @@ span.flatpickr-weekday {
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
   font-family: "hkgrotesk", sans-serif;
-  color: var(--vz-dark);
+  color: #ffffff;
   padding: 14px;
 }
 @media (max-width: 991.98px) {
@@ -15350,7 +15350,7 @@ span.flatpickr-weekday {
   display: block;
 }
 .navbar-light .navbar-nav .nav-item .nav-link {
-  color: rgba(243, 246, 249, 0.75);
+  color: rgba(243, 246, 249, 0.85);
 }
 .navbar-light.is-sticky .navbar-nav .nav-item .nav-link {
   color: var(--vz-dark);

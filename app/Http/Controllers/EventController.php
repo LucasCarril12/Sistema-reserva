@@ -107,7 +107,7 @@ class EventController extends Controller
     }
 
     /**
-     * ELIMINAR EVENTO
+     * ELIMINAR EVENTO ENTERO
      */
     public function destroy(string $id)
     {
@@ -125,5 +125,17 @@ class EventController extends Controller
         return redirect()
             ->route('events.index')
             ->with('success', 'Evento eliminado correctamente');
+    }
+
+    //ELIMINAR IMG DEL EVENTO
+    public function destroyImage(EventImage $image)
+    {
+        if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+
+        $image->delete();
+
+        return back()->with('success', 'Imagen eliminada correctamente');
     }
 }

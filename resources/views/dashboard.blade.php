@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="px-3">
-                                                <img src="{{ asset('assets/images/dashbord/img_dashbord_airplane.svg')}}" class="img-fluid" alt="Imagen de bienvenida, avion antiguo"> {{-- TODO: Colocar la imagen de bienvenida --}}
+                                                <img src="{{ asset('assets/images/dashbord/img_dashbord_airplane.svg')}}" class="img-fluid" alt="Imagen de bienvenida, avion antiguo">
                                             </div>
                                         </div>
                                     </div>

@@ -351,61 +351,88 @@ class ReservationController extends Controller
 
 
     public function getAllReservations(){
-        // $reservations = Reservation::all();
-        $reservations = Reservation::with('detail')->get();
-        $events = [];
+        try {
+            // Eager load related models to avoid N+1 and normalize output
+            $reservations = Reservation::with(['detail', 'user'])->get();
+            $events = [];
 
-        foreach($reservations as $reservation){
+            foreach ($reservations as $reservation) {
+                $color = '#e0e0e0';
+                $bordercolor = '#e0e0e0';
 
-            $color = '#e0e0e0';
-            $bordercolor = '#e0e0e0';
+                if ($reservation->reservation_status === 'confirmada') {
+                    $color = '#ffc107';
+                    $bordercolor = '#ffc107';
+                } elseif ($reservation->reservation_status === 'realizada') {
+                    $color = '#28a745';
+                    $bordercolor = '#28a745';
+                } elseif ($reservation->reservation_status === 'cancelada') {
+                    $color = '#dc3545';
+                    $bordercolor = '#dc3545';
+                }
 
-            if($reservation->reservation_status === 'confirmada'){
-                $color = '#ffc107';
-                $bordercolor = '#ffc107';
-            }elseif($reservation->reservation_status === 'realizada'){
-                $color = '#28a745';
-                $bordercolor = '#28a745';
-            }elseif($reservation->reservation_status === 'cancelada'){
-                $color = '#dc3545';
-                $bordercolor = '#dc3545';
+                // Normalizar start a formato ISO8601; si no es válido, saltar el evento
+                $start = null;
+                if ($reservation->reservation_date) {
+                    $time = $reservation->start_time ?: '00:00';
+                    try {
+                        $parsed = Carbon::parse($reservation->reservation_date . ' ' . $time);
+                        $start = $parsed->toIso8601String();
+                    } catch (\Exception $e) {
+                        $start = null;
+                    }
+                }
+
+                // Si no hay una fecha de inicio válida, omitimos el evento para evitar romper FullCalendar
+                if (empty($start)) {
+                    continue;
+                }
+
+                $events[] = [
+                    'id' => $reservation->id,
+                    'title' => trim($reservation->institucion . ' ' . ($reservation->start_time ?? '')) ?: 'Reserva',
+                    'start' => $start,
+                    'backgroundColor' => $color,
+                    'borderColor' => $bordercolor,
+                    'extendedProps' => [
+                        'reservation_status' => $reservation->reservation_status,
+                        'institucion' => $reservation->institucion,
+                        'reservation_date' => $reservation->reservation_date,
+                        'start_time' => $reservation->start_time,
+                        'cancellation_reason' => $reservation->cancellation_reason,
+                        'user' => $reservation->user ? [
+                            'email' => $reservation->user->email,
+                            'name' => $reservation->user->nombres ?? null,
+                        ] : null,
+                        'detail' => $reservation->detail ? [
+                            'nombre_responsable' => $reservation->detail->nombre_responsable,
+                            'ci' => $reservation->detail->ci,
+                            'email' => $reservation->detail->email,
+                            'telefono' => $reservation->detail->telefono,
+                            'telefono2' => $reservation->detail->telefono2,
+                            'sala' => $reservation->detail->sala,
+                            'direccion' => $reservation->detail->direccion,
+                            'total_ninios' => $reservation->detail->total_ninios,
+                            'total_adultos' => $reservation->detail->total_adultos,
+                            'requerimientos' => $reservation->detail->requerimientos,
+                            'obs' => $reservation->detail->obs,
+                        ] : null,
+                    ],
+                ];
             }
 
-            $events[] = [
-                'id' => $reservation->id,
-                'title' => $reservation->institucion.' '.$reservation->start_time,
-                'start' => $reservation->reservation_date.'T'.$reservation->start_time,
-                'backgroundColor'=> $color,
-                'borderColor'=> $bordercolor,
-                'extendedProps' => [
-                    'reservation_status' => $reservation->reservation_status,
-                    'institucion' => $reservation->institucion,
-                    'reservation_date' => $reservation->reservation_date,
-                    'start_time' => $reservation->start_time,
-                    'cancellation_reason' => $reservation->cancellation_reason,
-                    'user' => $reservation->user ? [
-                        'email' => $reservation->user->email,
-                        'name' => $reservation->user->name ?? null,
-                    ] : null,
-                    'detail' => $reservation->detail ? [
-                        'nombre_responsable' => $reservation->detail->nombre_responsable,
-                        'ci' => $reservation->detail->ci,
-                        'email' => $reservation->detail->email,
-                        'telefono' => $reservation->detail->telefono,
-                        'telefono2' => $reservation->detail->telefono2,
-                        'sala' => $reservation->detail->sala,
-                        'direccion' => $reservation->detail->direccion,
-                        'total_ninios' => $reservation->detail->total_ninios,
-                        'total_adultos' => $reservation->detail->total_adultos,
-                        'requerimientos' => $reservation->detail->requerimientos,
-                        'obs' => $reservation->detail->obs,
-                    ] : null,
-                ],
-            ];
+            // Log para debugging y asegurar que devolvemos JSON limpio
+            Log::info('FullCalendar payload (administrador)', ['count' => count($events)]);
+            Log::debug('FullCalendar events sample', array_slice($events, 0, 10));
 
+            return response()->json($events, 200)
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
+        } catch (\Exception $e) {
+            Log::error('Error cargando reservas para calendario', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Error interno al cargar reservas'], 500);
         }
-
-        return response()->json($events);
     }
 
     public function getAllReservationsCliente(){
@@ -433,10 +460,25 @@ class ReservationController extends Controller
                 $bordercolor = '#dc3545';
             }
 
+            // Normalizar start y validar
+            $start = null;
+            if ($reservation->reservation_date) {
+                $time = $reservation->start_time ?: '00:00';
+                try {
+                    $start = Carbon::parse($reservation->reservation_date . ' ' . $time)->toIso8601String();
+                } catch (\Exception $e) {
+                    $start = null;
+                }
+            }
+
+            if (empty($start)) {
+                continue;
+            }
+
             $events[] = [
                 'id' => $reservation->id,
-                'title' => $reservation->institucion.' '.$reservation->start_time,
-                'start' => $reservation->reservation_date.'T'.$reservation->start_time,
+                'title' => trim($reservation->institucion.' '.$reservation->start_time) ?: 'Reserva',
+                'start' => $start,
                 'backgroundColor'=> $color,
                 'borderColor'=> $bordercolor,
                 'extendedProps' => [
@@ -467,7 +509,13 @@ class ReservationController extends Controller
 
         }
 
-        return response()->json($events);
+        Log::info('FullCalendar payload (cliente)', ['count' => count($events)]);
+        Log::debug('FullCalendar events cliente sample', array_slice($events, 0, 10));
+
+        return response()->json($events)
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
 

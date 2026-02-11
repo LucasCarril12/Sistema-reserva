@@ -1,29 +1,199 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
+@section('content')
+    {{-- ::: Img de fondo (hero) ::: --}}
+    <div class="profile-foreground position-relative mx-n4 mt-n4">
+        <div class="profile-wid-bg">
+                <img src="assets/images/profile-bg.png" alt="Fondo de perfil" class="profile-wid-img" />
+        </div>
+    </div>
+
+    <div class="pt-4 mb-4 mb-lg-3 pb-lg-4">
+        <div class="row g-4">
+            <div class="col-auto">
+                <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('assets/images/users/multi-user.jpg') }}" alt="user-img" class="img-thumbnail rounded-circle avatar-md rounded-circle object-cover" />
+            </div>
+            <!--end col-->
+            <div class="col">
+                <div class="p-2">
+                    <h3 class="text-white mb-1">{{ Auth::user()->nombres }} {{ Auth::user()->apellidos }}</h3>
+                    <p class="text-white-75">{{ Auth::user()->email }}</p>
                 </div>
             </div>
+            <!--end col-->
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
+        </div>
+        <!--end row-->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div>
+                <div class="d-flex">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-pills animation-nav profile-nav gap-2 gap-lg-3 flex-grow-1" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link fs-14 active" data-bs-toggle="tab" href="#overview-tab" role="tab">
+                                <i class="ri-airplay-fill d-inline-block d-md-none"></i> <span class="d-none d-md-inline-block">Info. Perfil</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    {{-- ::: Btn editar perfil ::: --}}
+                    <div class="flex-shrink-0">
+                        <button class="btn btn-info add-btn" data-bs-toggle="modal" data-bs-target="#showModal"><i class="ri-edit-box-line align-bottom"></i> Editar Perfil</button>
+                    </div>
+
+                    {{-- :::: Panel de editar usuario ::: --}}
+                    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0">
+                                <div class="modal-header bg-soft-info p-3">
+                                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+                                </div>
+                                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PATCH')
+                                    <div class="modal-body">
+                                        <input type="hidden" id="id-field" />
+                                        <div class="row g-3">
+                                            <div class="col-lg-12">
+                                                <div class="text-center">
+                                                    <div class="position-relative d-inline-block">
+                                                        <div class="position-absolute bottom-0 end-0">
+                                                            <label for="perfil-usuario" class="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Cambiar foto de perfil">
+                                                                <div class="avatar-xs cursor-pointer">
+                                                                    <div class="avatar-title bg-light border rounded-circle text-muted">
+                                                                        <i class="ri-image-fill"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </label>
+                                                            <input  class="form-control d-none" name="foto" id="perfil-usuario" type="file" accept="image/*">
+                                                        </div>
+                                                        <div class="avatar-lg p-1">
+                                                            <div class="avatar-title bg-light rounded-circle">
+                                                                <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('assets/images/users/multi-user.jpg') }}" alt="Foto perfil actual" class="avatar-md rounded-circle object-cover" id="preview-foto" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="fs-13 mt-3">Foto de Perfil</h5>
+                                                    <div class="mt-2 d-flex gap-2 justify-content-center">
+                                                        <button type="button" class="btn btn-sm btn-warning" id="btn-delete-foto" style="display: none;">
+                                                            <i class="ri-delete-bin-line"></i> Borrar Foto
+                                                        </button>
+                                                    </div>
+                                                    <input type="hidden" name="delete_foto" id="delete-foto-input" value="0">
+                                                </div>
+                                                <div>
+                                                    <label for="nombre-field" class="form-label">Nombre :</label>
+                                                    <input type="text" name="nombres" id="nombre-field" class="form-control" placeholder="Ingrese su Nombre" value="{{ old('nombres', Auth::user()->nombres) }}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div>
+                                                    <label for="apellido-field" class="form-label">Apellido :</label>
+                                                    <input type="text" name="apellidos" id="apellido-field" class="form-control" placeholder="Ingrese su Apellido" value="{{ old('apellidos', Auth::user()->apellidos) }}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div>
+                                                    <label for="email-field" class="form-label">Email :</label>
+                                                    <input type="email" name="email" id="email-field" class="form-control" placeholder="Ingrese su correo electronico" value="{{ old('email', Auth::user()->email) }}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div>
+                                                    <label for="telefono-field" class="form-label">Telefono :</label>
+                                                    <input type="text" name="telefono" id="telefono-field" class="form-control" placeholder="Ingrese su telefono" value="{{ old('telefono', Auth::user()->telefono) }}" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="hstack gap-2 justify-content-end">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-success" id="edit-btn">Actualizar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
+                <!-- Tab panes -->
+
+                <div class="tab-content pt-4 text-muted">
+                    <div class="tab-pane active" id="overview-tab" role="tabpanel">
+                        <div class="row">
+                            {{-- ::: INFORMACION USUARIO ::: --}}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-3">Información</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-borderless mb-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="ps-0" scope="row">Nombre :</th>
+                                                        <td class="text-muted">{{ Auth::user()->nombres }} {{ Auth::user()->apellidos }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="ps-0" scope="row">Telefono :</th>
+                                                        <td class="text-muted">{{ Auth::user()->telefono }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="ps-0" scope="row">Email :</th>
+                                                        <td class="text-muted">{{ Auth::user()->email }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="ps-0" scope="row">Creado el :</th>
+                                                        <td class="text-muted">{{ Auth::user()->created_at->format('d M Y') }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div><!-- end card body -->
+                                </div><!-- end card -->
+                        </div>
+                        <!--end row-->
+                    </div>
                 </div>
             </div>
         </div>
+        <!--end col-->
     </div>
-</x-app-layout>
+@endsection
+
+@push('scripts')
+<script>
+    // Previsualización de imagen de perfil
+    document.getElementById('perfil-usuario').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('preview-foto').src = event.target.result;
+                document.getElementById('btn-delete-foto').style.display = 'inline-block';
+                document.getElementById('delete-foto-input').value = '0';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Borrar foto de perfil
+    document.getElementById('btn-delete-foto').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('preview-foto').src = '{{ asset("assets/images/users/multi-user.jpg") }}';
+        document.getElementById('perfil-usuario').value = '';
+        document.getElementById('delete-foto-input').value = '1';
+        this.style.display = 'none';
+    });
+
+    // Mostrar botón de borrar si ya existe foto
+    @if(Auth::user()->foto)
+        document.getElementById('btn-delete-foto').style.display = 'inline-block';
+    @endif
+</script>
+@endpush

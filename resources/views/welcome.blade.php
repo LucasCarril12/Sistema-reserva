@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none">
-
 <head>
     <meta charset="utf-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -8,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
+
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}">
 
@@ -27,402 +27,119 @@
     <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/box-custom.css') }}" rel="stylesheet" type="text/css" />
+
+    {{-- AOS Animation css --}}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#navbar-example">
-
     <!-- Begin page -->
     <div class="layout-wrapper landing bg-welcome-color">
-        <nav class="navbar navbar-expand-lg navbar-landing navbar-light fixed-top" id="navbar">
-            <div class="container">
-                <a class="navbar-brand" href="index.html">
-                    <img src="{{ asset('assets/images/logo-mujer-alada-blanca.png') }}" class="card-logo card-logo-dark" alt="logo dark" height="50">
-                    <img src="{{ asset('assets/images/favicon.png') }}" class="card-logo card-logo-light" alt="logo light" height="50">
-                </a>
-
-                <div class="collapse navbar-collapse " id="navbarSupportedContent">
-                    {{-- --- NAVBAR LINKS --- --}}
-                    <ul class="navbar-nav mx-auto mt-2 mt-lg-0" id="navbar-example">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#hero">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#wallet">Instalaciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#marketplace">Vistas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#categories">Aeronaves</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#creators">Aniversarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://www.instagram.com/aama_uruguay/">AAMA</a>
-                        </li>
-                    </ul>
-
-                    @if (Route::has('login'))
-                        <nav class="flex items-center justify-center gap-5">
-                            @auth
-                                <a href="{{ url('/dashboard') }}" class="btn btn-primary rounded-pill m-2 px-3"> Dashboard </a>
-                            @else
-                                <a
-                                    href="{{ route('login') }}"
-                                    class="btn btn-primary rounded-pill m-2 px-3" >
-                                    Iniciar sesión
-                                </a>
-
-                                @if (Route::has('register'))
-                                    <a
-                                        href="{{ route('register') }}"
-                                        class="btn btn-light rounded-pill  px-3" >
-                                        Crear cuenta
-                                    </a>
-                                @endif
-                            @endauth
-                        </nav>
-                    @endif
-                </div>
-            </div>
-        </nav>
-        <!-- end navbar -->
-
         <!-- start hero section -->
-        <section class="section nft-hero" id="hero" style="background-image: url('{{ asset('assets/images/auth-one-bg.jpg') }}'); background-size: cover; background-position: center;">
-            <div class="bg-overlay" style="background-color: black;opacity:0.5"></div> <!-- oscuridad -->
-        </section><!-- end hero section -->
+        <section class="section" id="hero" style="background-image: url('{{ asset('assets/images/auth-one-bg.png') }}'); background-size: cover; background-position: center;">
+            @include('layouts.landing.navbar')
+            <div class="bg-overlay" style="background-color: black;opacity:0.6"></div> <!-- oscuridad -->
+        </section>
+        <!-- end hero section -->
 
         <!-- start wallet -->
         <section class="section" id="wallet">
-            <div class="container">
-                <div class="title-inicio">
-                    <div>
-                        <h4>DOMINGO</h4>
-                        <p>13:00 a 17:00 hrs</p>
-                    </div>
-                </div>
-                <div class="parent">
-                    <div class="carrusel-1-grid">
-                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                            <div class="carousel-item active">
-                            <img class="d-block w-100" src="assets/images/inicio/SalaCivil.png" alt="First slide">
+            <div class="container" data-aos-delay="100">
+                <div class="row align-items-center gy-5">
+                    <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
+                        <div class="hero-content">
+                            <div class="hero-tag" data-aos="fade-right" data-aos-delay="250">
+                                <span class="tag-text">Pasado, presente y futuro del vuelo</span>
                             </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="assets/images/inicio/SalaEspacial.png" alt="Second slide">
-                            </div>
-                            <div class="carousel-item">
-                            <img class="d-block w-100" src="assets/images/inicio/SalaMilitar.png" alt="Third slide">
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+
+                            <h1 class="hero-headline fw-bold" data-aos="fade-right" data-aos-delay="300">
+                                Un viaje por la historia de la aviación
+                            </h1>
+
+                            <p class="hero-text" data-aos="fade-right" data-aos-delay="350">
+                            El Museo Aeronáutico es un espacio de aprendizaje y
+                            disfrute que invita a recorrer la historia
+                            de la aeronáutica
+                            y la astronáutica desde sus inicios en el país.</p>
                         </div>
                     </div>
-                    <div class="carrusel-2-grid"> </div>
-                    <div class="carrusel-3-grid"> </div>
-                    <div class="carrusel-4-grid"> </div>
-                    <div class="carrusel-5-grid"> </div>
-                    <div class="carrusel-6-grid"> </div>
-                    <div class="carrusel-7-grid"> </div>
-                    <div class="carrusel-8-grid"> </div>
-                    <div class="carrusel-9-grid"> </div>
-                    <div class="carrusel-10-grid"> </div>
-                </div>
-
-                <div class="col g-4">
-
-                    <div class="title-style">
-                        <h4 class="title-color-1">Próximos eventos</h4>
-                        <p>Museo Aeronáutico Cnel. (Av.) Jaime Meregalli</p>
-                    </div>
-
-                    <div class="col-12">
-
-                        @foreach ($events as $event)
-                            <div class="box-event mb-event">
-
-                                <!-- TEXTO (60%) -->
-                                <div class="box-event-text">
-                                    <h2>{{ $event->title }}</h2>
-                                    <h5>{{ $event->subtitle }}</h5>
-                                    <p>{{ $event->description }}</p>
-                                </div>
-
-                                <!-- IMÁGENES (40%) -->
-                                <div class="box-event-images">
-
-                                    @if($event->images->isNotEmpty())
-                                        <div id="carousel-event-{{ $event->id }}" class="carousel slide" data-bs-ride="carousel">
-                                            <div class="carousel-inner">
-
-                                                @foreach($event->images as $image)
-                                                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}" data-bs-interval="4000">
-                                                        <img
-                                                            src="{{ asset('storage/' . $image->image_path) }}"
-                                                            class="carousel-img"
-                                                            alt="{{ $event->title }}"
-                                                        >
-                                                    </div>
-                                                @endforeach
-
-                                            </div>
-
-                                            <button class="carousel-control-prev" type="button"
-                                                data-bs-target="#carousel-event-{{ $event->id }}" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon"></span>
-                                            </button>
-
-                                            <button class="carousel-control-next" type="button"
-                                                data-bs-target="#carousel-event-{{ $event->id }}" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon"></span>
-                                            </button>
+                    <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+                        <div class="stats-grid">
+                            <div class="row g-4">
+                                <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                                    <div class="stat-card stat-primary">
+                                        <div class="stat-icon">
+                                            <i class="bi bi-alarm"></i>
                                         </div>
-                                    @else
-                                        <div class="alert alert-secondary">Este evento no tiene imágenes.</div>
-                                    @endif
-
+                                        <div class="stat-info">
+                                            <h3>Horario</h3>
+                                            <p>Domingos - 13:00hs a 18:00hs</p>
+                                        </div>
+                                    </div>
                                 </div>
 
-                            </div>
-                        @endforeach
+                                <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="bi bi-question-circle"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <h3>FAQs</h3>
+                                            <p>Preguntas frecuentes</p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    </div>
-
-
-                    <!-- end col -->
-
-                    <div class="col-lg-4">
-                        <div class="card text-center border shadow-none">
-                            <div class="card-body py-5 px-4">
-                                <img src="assets/images/nft/wallet/coinbase.png" alt="" height="55" class="mb-3 pb-2">
-                                <h5>Coinbase Wallet</h5>
-                                <p class="text-muted pb-1">Coinbase Wallet is a software product that gives you access to a wide spectrum.</p>
-                                <a href="#!" class="btn btn-info">Change Wallet</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-
-                    <div class="col-lg-4">
-                        <div class="card text-center border shadow-none">
-                            <div class="card-body py-5 px-4">
-                                <img src="assets/images/nft/wallet/binance.png" alt="" height="55" class="mb-3 pb-2">
-                                <h5>Binance</h5>
-                                <p class="text-muted pb-1">Binance offers a relatively secure, versatile way to invest in and trade cryptocurrencies.</p>
-                                <a href="#!" class="btn btn-soft-info">Connect Wallet</a>
+                                <div class="col-12" data-aos="fade-up" data-aos-delay="100">
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="bi bi-calendar-event"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <h3>Visita guiada</h3>
+                                            <p>Agenda tu visita guiada</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
-                    <!-- end col -->
-                </div><!-- end row -->
-            </div><!-- end container -->
-        </section><!-- end wallet -->
+                </div>
+            </div>
+        </section>
+        <!-- end wallet -->
 
         <!-- start marketplace -->
-        <section class="section bg-light" id="marketplace">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="text-center mb-5">
-                            <h2 class="mb-3 fw-semibold lh-base">Explore Products</h2>
-                            <p class="text-muted mb-4">Collection widgets specialize in displaying many elements of the same type, such as a collection of pictures from a collection of articles.</p>
-                            <ul class="nav nav-pills filter-btns justify-content-center" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link fw-medium active" type="button" data-filter="all">All Items</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link fw-medium" type="button" data-filter="artwork">Artwork</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link fw-medium" type="button" data-filter="music">Music</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link fw-medium" type="button" data-filter="games">Games</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link fw-medium" type="button" data-filter="crypto-card">Crypto Card</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link fw-medium" type="button" data-filter="3d-style">3d Style</button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div><!-- end col -->
-                </div><!-- end row -->
-                <div class="row">
-                    <div class="col-lg-4 product-item artwork crypto-card 3d-style">
-                        <div class="card explore-box card-animate">
-                            <div class="bookmark-icon position-absolute top-0 end-0 p-2">
-                                <button type="button" class="btn btn-icon active" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
-                            </div>
-                            <div class="explore-place-bid-img">
-                                <img src="assets/images/nft/img-03.jpg" alt="" class="card-img-top explore-img" />
-                                <div class="bg-overlay"></div>
-                                <div class="place-bid-btn">
-                                    <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 19.29k </p>
-                                <h5 class="mb-1"><a href="apps-nft-item-details.html">Creative Filtered Portrait</a></h5>
-                                <p class="text-muted mb-0">Photography</p>
-                            </div>
-                            <div class="card-footer border-top border-top-dashed">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 fs-14">
-                                        <i class="ri-price-tag-3-fill text-warning align-bottom me-1"></i> Highest: <span class="fw-medium">75.3ETH</span>
-                                    </div>
-                                    <h5 class="flex-shrink-0 fs-14 text-primary mb-0">67.36 ETH</h5>
-                                </div>
-                            </div>
-                        </div>
+        <section id="visita_guiada" class="about section bg-light">
+            <div class="container-fluid ">
+                <div class="row align-items-center gy-5">
+                    <div class="col-lg-5" data-aos="fade-right">
+                        <div class="img-visita-guiada" ></div>
                     </div>
-                    <div class="col-lg-4 product-item music crypto-card games">
-                        <div class="card explore-box card-animate">
-                            <div class="bookmark-icon position-absolute top-0 end-0 p-2">
-                                <button type="button" class="btn btn-icon active" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
+
+                    <div class="col-lg-7" data-aos="fade-left" data-aos-delay="300">
+                        <div class="content-section">
+                            <div class="section-intro">
+                                <div class="company-badge" style="color:#006ED2; font-weight: 500;">¡Agenda tu visita guiada!</div>
+                                <h2 class="mt-3">Se realizan visitas guiadas de lunes a viernes</h2>
+                                <p class="intro-text">Las visitas guiadas se realizan junto a
+                                    un guía del museo, quien acompaña a los visitantes durante
+                                    el recorrido. El museo cuenta con <strong>tres salas</strong>, y la duración
+                                    de la visita es de entre <strong>1 y 2 horas</strong>,
+                                    dependiendo de las salas que se elijan recorrer.</p>
                             </div>
-                            <div class="explore-place-bid-img">
-                                <img src="assets/images/nft/img-02.jpg" alt="" class="card-img-top explore-img" />
-                                <div class="bg-overlay"></div>
-                                <div class="place-bid-btn">
-                                    <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 23.63k </p>
-                                <h5 class="mb-1"><a href="apps-nft-item-details.html">The Chirstoper</a></h5>
-                                <p class="text-muted mb-0">Music</p>
-                            </div>
-                            <div class="card-footer border-top border-top-dashed">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 fs-14">
-                                        <i class="ri-price-tag-3-fill text-warning align-bottom me-1"></i> Highest: <span class="fw-medium">412.30ETH</span>
-                                    </div>
-                                    <h5 class="flex-shrink-0 fs-14 text-primary mb-0">394.7 ETH</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 product-item artwork music games">
-                        <div class="card explore-box card-animate">
-                            <div class="bookmark-icon position-absolute top-0 end-0 p-2">
-                                <button type="button" class="btn btn-icon active" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
-                            </div>
-                            <div class="explore-place-bid-img">
-                                <img src="assets/images/nft/gif/img-4.gif" alt="" class="card-img-top explore-img" />
-                                <div class="bg-overlay"></div>
-                                <div class="place-bid-btn">
-                                    <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 15.93k </p>
-                                <h5 class="mb-1"><a href="apps-nft-item-details.html">Evolved Reality</a></h5>
-                                <p class="text-muted mb-0">Video</p>
-                            </div>
-                            <div class="card-footer border-top border-top-dashed">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 fs-14">
-                                        <i class="ri-price-tag-3-fill text-warning align-bottom me-1"></i> Highest: <span class="fw-medium">2.75ETH</span>
-                                    </div>
-                                    <h5 class="flex-shrink-0 fs-14 text-primary mb-0">3.167 ETH</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 product-item crypto-card 3d-style">
-                        <div class="card explore-box card-animate">
-                            <div class="bookmark-icon position-absolute top-0 end-0 p-2">
-                                <button type="button" class="btn btn-icon active" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
-                            </div>
-                            <div class="explore-place-bid-img">
-                                <img src="assets/images/nft/img-01.jpg" alt="" class="card-img-top explore-img" />
-                                <div class="bg-overlay"></div>
-                                <div class="place-bid-btn">
-                                    <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 14.85k </p>
-                                <h5 class="mb-1"><a href="apps-nft-item-details.html">Abstract Face Painting</a></h5>
-                                <p class="text-muted mb-0">Collectibles</p>
-                            </div>
-                            <div class="card-footer border-top border-top-dashed">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 fs-14">
-                                        <i class="ri-price-tag-3-fill text-warning align-bottom me-1"></i> Highest: <span class="fw-medium">122.34ETH</span>
-                                    </div>
-                                    <h5 class="flex-shrink-0 fs-14 text-primary mb-0">97.8 ETH</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 product-item games music 3d-style">
-                        <div class="card explore-box card-animate">
-                            <div class="bookmark-icon position-absolute top-0 end-0 p-2">
-                                <button type="button" class="btn btn-icon active" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
-                            </div>
-                            <div class="explore-place-bid-img">
-                                <img src="assets/images/nft/img-05.jpg" alt="" class="card-img-top explore-img" />
-                                <div class="bg-overlay"></div>
-                                <div class="place-bid-btn">
-                                    <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 64.10k </p>
-                                <h5 class="mb-1"><a href="apps-nft-item-details.html">Long-tailed Macaque</a></h5>
-                                <p class="text-muted mb-0">Artwork</p>
-                            </div>
-                            <div class="card-footer border-top border-top-dashed">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 fs-14">
-                                        <i class="ri-price-tag-3-fill text-warning align-bottom me-1"></i> Highest: <span class="fw-medium">874.01ETH</span>
-                                    </div>
-                                    <h5 class="flex-shrink-0 fs-14 text-primary mb-0">745.14 ETH</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 product-item artwork music crypto-card">
-                        <div class="card explore-box card-animate">
-                            <div class="bookmark-icon position-absolute top-0 end-0 p-2">
-                                <button type="button" class="btn btn-icon active" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
-                            </div>
-                            <div class="explore-place-bid-img">
-                                <img src="assets/images/nft/img-06.jpg" alt="" class="card-img-top explore-img" />
-                                <div class="bg-overlay"></div>
-                                <div class="place-bid-btn">
-                                    <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 36.42k </p>
-                                <h5 class="mb-1"><a href="apps-nft-item-details.html">Robotic Body Art</a></h5>
-                                <p class="text-muted mb-0">Artwork</p>
-                            </div>
-                            <div class="card-footer border-top border-top-dashed">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 fs-14">
-                                        <i class="ri-price-tag-3-fill text-warning align-bottom me-1"></i> Highest: <span class="fw-medium">41.658 ETH</span>
-                                    </div>
-                                    <h5 class="flex-shrink-0 fs-14 text-primary mb-0">34.81 ETH</h5>
-                                </div>
+
+                            <div class="action-section">
+                                <a href="{{ route('login') }}" class="btn btn-primary btn-login mt-3 px-3" style="box-shadow: 0 0px 30px rgba(0, 0, 0, 0.3);">Agendar visita guiada</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div><!-- end container -->
+            </div>
+
         </section>
         <!-- end marketplace -->
 
@@ -431,596 +148,235 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
-                        <div class="text-center mb-5">
-                            <h2 class="mb-3 fw-semibold lh-base">Create and Sell Your NFTs</h2>
-                            <p class="text-muted">The process of creating an NFT may cost less than a dollar, but the process of selling it can cost up to a thousand dollars. For example, Allen Gannett, a software developer.</p>
+                        <div class="text-center mb-2" data-aos="zoom-in">
+                            <h2 class="fw-semibold" style="color: #006ED2;">Próximos eventos</h2>
+                            <p class="text-muted">Museo Aeronáutico Cnel. (Av.) Jaime Meregalli</p>
                         </div>
                     </div><!-- end col -->
                 </div><!-- end row -->
 
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="card shadow-none">
-                            <div class="card-body">
-                                <img src="assets/images/nft/wallet.png" alt="" class="avatar-sm">
-                                <h5 class="mt-4">Set up your wallet</h5>
-                                <p class="text-muted fs-14">You have to choose whether to use a hot wallet a cold wallet.</p>
-                                <a href="#!" class="link-success fs-14">Read More <i class="ri-arrow-right-line align-bottom"></i></a>
+                <div class="row" >
+                    @foreach ($events as $event)
+                        @php
+                            $carouselId = 'carouselEvent'.$loop->index;
+                        @endphp
+
+                        <div class="container my-5" data-aos="zoom-in">
+
+                            <div class="row align-items-center event-box">
+
+                                <!-- TEXTO -->
+                                <div class="col-lg-6 text-lg-end event-text">
+                                    <h3 class="mb-2 fw-bold">
+                                        {{ $event->title }}
+                                    </h3>
+
+                                    <h4 class="mb-3 text-muted">
+                                        {{ $event->subtitle }}
+                                    </h4>
+
+                                    <p>
+                                        {!! nl2br(e($event->description)) !!}
+                                    </p>
+                                </div>
+
+                                <!-- CARRUSEL -->
+                                <div class="col-lg-6">
+
+                                    @if($event->images->count())
+                                    <div id="{{ $carouselId }}" class="carousel slide" data-bs-ride="carousel">
+
+                                        <!-- INDICATORS -->
+                                        <div class="carousel-indicators">
+                                            @foreach ($event->images as $key => $image)
+                                                <button
+                                                    type="button"
+                                                    data-bs-target="#{{ $carouselId }}"
+                                                    data-bs-slide-to="{{ $key }}"
+                                                    class="{{ $key === 0 ? 'active' : '' }}"
+                                                    aria-current="{{ $key === 0 ? 'true' : 'false' }}">
+                                                </button>
+                                            @endforeach
+                                        </div>
+
+                                        <!-- SLIDES -->
+                                        <div class="carousel-inner">
+                                            @foreach ($event->images as $key => $image)
+                                                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                                                    <img
+                                                        src="{{ asset('storage/'.$image->image_path) }}"
+                                                        class="d-block h-100 w-100 img-fluid"
+                                                        alt="{{ $event->title }}">
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <!-- CONTROLS -->
+                                        <button class="carousel-control-prev" type="button"
+                                                data-bs-target="#{{ $carouselId }}"
+                                                data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon"></span>
+                                        </button>
+
+                                        <button class="carousel-control-next" type="button"
+                                                data-bs-target="#{{ $carouselId }}"
+                                                data-bs-slide="next">
+                                            <span class="carousel-control-next-icon"></span>
+                                        </button>
+
+                                    </div>
+                                    @endif
+
+                                </div>
                             </div>
+
                         </div>
-                    </div><!--end col-->
-                    <div class="col-lg-3">
-                        <div class="card shadow-none">
-                            <div class="card-body">
-                                <img src="assets/images/nft/money.png" alt="" class="avatar-sm">
-                                <h5 class="mt-4">Create your collection</h5>
-                                <p class="text-muted fs-14">Create a collection in Opensea and give it a proper art.</p>
-                                <a href="#!" class="link-success fs-14">Read More <i class="ri-arrow-right-line align-bottom"></i></a>
-                            </div>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-lg-3">
-                        <div class="card shadow-none">
-                            <div class="card-body">
-                                <img src="assets/images/nft/add.png" alt="" class="avatar-sm">
-                                <h5 class="mt-4">Add your NFT's</h5>
-                                <p class="text-muted fs-14">Go to your profile icon and top right corner creation page.</p>
-                                <a href="#!" class="link-success fs-14">Read More <i class="ri-arrow-right-line align-bottom"></i></a>
-                            </div>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-lg-3">
-                        <div class="card shadow-none">
-                            <div class="card-body">
-                                <img src="assets/images/nft/sell.png" alt="" class="avatar-sm">
-                                <h5 class="mt-4">Sell Your NFT's</h5>
-                                <p class="text-muted fs-14">Create a collection in Opensea and give Add items and art.</p>
-                                <a href="#!" class="link-success fs-14">Read More <i class="ri-arrow-right-line align-bottom"></i></a>
-                            </div>
-                        </div>
-                    </div><!--end col-->
-                </div><!--end row-->
+
+                    @endforeach
+                </div>
             </div><!-- end container -->
         </section><!-- end features -->
 
-        <!-- start plan -->
+        <!-- FEEDBACK USUARIO -->
         <section class="section bg-light" id="categories">
             <div class="container-fluid">
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" data-aos="zoom-in" data-aos-duration="300">
                     <div class="col-lg-5">
-                        <div class="text-center mb-5">
-                            <h2 class="mb-3 fw-semibold lh-base">Trending All Categories</h2>
-                            <p class="text-muted">The process of creating an NFT may cost less than a dollar, but the process of selling it can cost up to a thousand dollars. For example, Allen Gannett, a software developer.</p>
-                        </div>
-                    </div><!-- end col -->
-                </div><!-- end row -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!-- Swiper -->
-                        <div class="swiper mySwiper pb-4">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row g-1 mb-3">
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/img-06.jpg" alt="" class="img-fluid rounded">
-                                                    <img src="assets/images/nft/gif/img-2.gif" alt="" class="img-fluid rounded mt-1">
-                                                </div><!--end col-->
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/gif/img-5.gif" alt="" class="img-fluid rounded mb-1">
-                                                    <img src="assets/images/nft/img-03.jpg" alt="" class="img-fluid rounded">
-                                                </div><!--end col-->
-                                            </div><!--end row-->
-                                            <a href="#!" class="float-end"> View All <i class="ri-arrow-right-line align-bottom"></i></a>
-                                            <h5 class="mb-0 fs-16"><a href="#!">Artwork <span class="badge badge-soft-success">206</span></a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row g-1 mb-3">
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/img-05.jpg" alt="" class="img-fluid rounded">
-                                                    <img src="assets/images/nft/gif/img-1.gif" alt="" class="img-fluid rounded mt-1">
-                                                </div><!--end col-->
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/gif/img-4.gif" alt="" class="img-fluid rounded mb-1">
-                                                    <img src="assets/images/nft/img-04.jpg" alt="" class="img-fluid rounded">
-                                                </div><!--end col-->
-                                            </div><!--end row-->
-                                            <a href="#!" class="float-end"> View All <i class="ri-arrow-right-line align-bottom"></i></a>
-                                            <h5 class="mb-0 fs-16"><a href="#!">Crypto Card <span class="badge badge-soft-success">743</span></a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row g-1 mb-3">
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/img-02.jpg" alt="" class="img-fluid rounded">
-                                                    <img src="assets/images/nft/gif/img-3.gif" alt="" class="img-fluid rounded mt-1">
-                                                </div><!--end col-->
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/gif/img-1.gif" alt="" class="img-fluid rounded mb-1">
-                                                    <img src="assets/images/nft/img-01.jpg" alt="" class="img-fluid rounded">
-                                                </div><!--end col-->
-                                            </div><!--end row-->
-                                            <a href="#!" class="float-end"> View All <i class="ri-arrow-right-line align-bottom"></i></a>
-                                            <h5 class="mb-0 fs-16"><a href="#!">Music <span class="badge badge-soft-success">679</span></a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row g-1 mb-3">
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/img-03.jpg" alt="" class="img-fluid rounded">
-                                                    <img src="assets/images/nft/gif/img-5.gif" alt="" class="img-fluid rounded mt-1">
-                                                </div><!--end col-->
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/gif/img-2.gif" alt="" class="img-fluid rounded mb-1">
-                                                    <img src="assets/images/nft/img-05.jpg" alt="" class="img-fluid rounded">
-                                                </div><!--end col-->
-                                            </div><!--end row-->
-                                            <a href="#!" class="float-end"> View All <i class="ri-arrow-right-line align-bottom"></i></a>
-                                            <h5 class="mb-0 fs-16"><a href="#!">Games <span class="badge badge-soft-success">341</span></a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row g-1 mb-3">
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/img-02.jpg" alt="" class="img-fluid rounded">
-                                                    <img src="assets/images/nft/gif/img-3.gif" alt="" class="img-fluid rounded mt-1">
-                                                </div><!--end col-->
-                                                <div class="col-lg-6">
-                                                    <img src="assets/images/nft/gif/img-1.gif" alt="" class="img-fluid rounded mb-1">
-                                                    <img src="assets/images/nft/img-01.jpg" alt="" class="img-fluid rounded">
-                                                </div><!--end col-->
-                                            </div><!--end row-->
-                                            <a href="#!" class="float-end"> View All <i class="ri-arrow-right-line align-bottom"></i></a>
-                                            <h5 class="mb-0 fs-16"><a href="#!">Photography <span class="badge badge-soft-success">1452</span></a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swiper-pagination swiper-pagination-dark"></div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- end container -->
-        </section>
-        <!-- end plan -->
-
-        <!-- start Discover Items-->
-        <section class="section">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12">
-                        <div class="d-flex align-items-center mb-5">
-                            <h2 class="mb-0 fw-semibold lh-base flex-grow-1">Discover Items</h2>
-                            <a href="apps-nft-explore.html" class="btn btn-primary">View All <i class="ri-arrow-right-line align-bottom"></i></a>
-                        </div>
-                    </div>
-                </div><!-- end row -->
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="card explore-box card-animate border">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <img src="assets/images/users/avatar-2.jpg" alt="" class="avatar-xs rounded-circle">
-                                    <div class="ms-2 flex-grow-1">
-                                        <a href="#!"><h6 class="mb-0 fs-15">Nancy Martino</h6></a>
-                                        <p class="mb-0 text-muted fs-13">Owners</p>
-                                    </div>
-                                    <div class="bookmark-icon">
-                                        <button type="button" class="btn btn-icon active" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
-                                    </div>
-                                </div>
-                                <div class="explore-place-bid-img overflow-hidden rounded">
-                                    <img src="assets/images/nft/img-05.jpg" alt="" class="explore-img w-100">
-                                    <div class="bg-overlay"></div>
-                                    <div class="place-bid-btn">
-                                        <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 19.29k </p>
-                                    <h5 class="text-success"><i class="mdi mdi-ethereum"></i> 97.8 ETH </h5>
-                                    <h6 class="fs-16 mb-0"><a href="apps-nft-item-details.html">Patterns arts &amp; culture</a></h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card explore-box card-animate border">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <img src="assets/images/users/avatar-9.jpg" alt="" class="avatar-xs rounded-circle">
-                                    <div class="ms-2 flex-grow-1">
-                                        <a href="#!"><h6 class="mb-0 fs-15">Henry Baird</h6></a>
-                                        <p class="mb-0 text-muted fs-13">Creators</p>
-                                    </div>
-                                    <div class="bookmark-icon">
-                                        <button type="button" class="btn btn-icon" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
-                                    </div>
-                                </div>
-                                <div class="explore-place-bid-img overflow-hidden rounded">
-                                    <img src="assets/images/nft/img-03.jpg" alt="" class="explore-img w-100">
-                                    <div class="bg-overlay"></div>
-                                    <div class="place-bid-btn">
-                                        <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 31.64k </p>
-                                    <h5 class="text-success"><i class="mdi mdi-ethereum"></i> 475.23 ETH </h5>
-                                    <h6 class="fs-16 mb-0"><a href="apps-nft-item-details.html">Evolved Reality</a></h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card explore-box card-animate border">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <img src="assets/images/users/avatar-10.jpg" alt="" class="avatar-xs rounded-circle">
-                                    <div class="ms-2 flex-grow-1">
-                                        <a href="#!"><h6 class="mb-0 fs-15">Diana Kohler</h6></a>
-                                        <p class="mb-0 text-muted fs-13">Owners</p>
-                                    </div>
-                                    <div class="bookmark-icon">
-                                        <button type="button" class="btn btn-icon active" data-bs-toggle="button" aria-pressed="true"><i class="mdi mdi-cards-heart fs-16"></i></button>
-                                    </div>
-                                </div>
-                                <div class="explore-place-bid-img overflow-hidden rounded">
-                                    <img src="assets/images/nft/gif/img-1.gif" alt="" class="img-fluid explore-img">
-                                    <div class="bg-overlay"></div>
-                                    <div class="place-bid-btn">
-                                        <a href="#!" class="btn btn-success"><i class="ri-auction-fill align-bottom me-1"></i> Place Bid</a>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <p class="fw-medium mb-0 float-end"><i class="mdi mdi-heart text-danger align-middle"></i> 8.34k </p>
-                                    <h5 class="text-success"><i class="mdi mdi-ethereum"></i> 701.38 ETH </h5>
-                                    <h6 class="fs-16 mb-0"><a href="apps-nft-item-details.html">Long-tailed macaque</a></h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!--end container-->
-        </section>
-        <!--end Discover Items-->
-
-        <!-- start Work Process -->
-        <section class="section bg-light" id="creators">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="text-center mb-5">
-                            <h2 class="mb-3 fw-semibold lh-base">Top Creator This Week</h2>
-                            <p class="text-muted">NFTs are valuable because they verify the authenticity of a non-fungible asset. This makes these assets unique and one of a kind.</p>
-                        </div>
-                    </div>
-                </div><!-- end row -->
-                <div class="row">
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-shink-0">
-                                        <img src="assets/images/nft/img-01.jpg" alt="" class="avatar-sm object-cover rounded" />
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <a href="pages-profile.html">
-                                            <h5 class="mb-1">Timothy Smith</h5>
-                                        </a>
-                                        <p class="text-muted mb-0"><i class="mdi mdi-ethereum text-primary fs-14"></i> 4,754 ETH</p>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown float-end">
-                                            <button class="btn btn-ghost-primary btn-icon dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ri-more-fill align-middle fs-16"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item view-item-btn" href="javascript:void(0);">Share</a></li>
-                                                <li><a class="dropdown-item edit-item-btn" href="#!" data-bs-toggle="modal">Report</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-shink-0">
-                                        <img src="assets/images/users/avatar-5.jpg" alt="" class="avatar-sm object-cover rounded">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <a href="pages-profile.html">
-                                            <h5 class="mb-1">Alexis Clarke</h5>
-                                        </a>
-                                        <p class="text-muted mb-0"><i class="mdi mdi-ethereum text-primary fs-14"></i> 81,369 ETH</p>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown float-end">
-                                            <button class="btn btn-ghost-primary btn-icon dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ri-more-fill align-middle fs-16"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item view-item-btn" href="javascript:void(0);">Share</a></li>
-                                                <li><a class="dropdown-item edit-item-btn" href="#!" data-bs-toggle="modal">Report</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!--end col-->
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-shink-0">
-                                        <img src="assets/images/nft/img-06.jpg" alt="" class="avatar-sm object-cover rounded">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <a href="pages-profile.html">
-                                            <h5 class="mb-1">Glen Matney</h5>
-                                        </a>
-                                        <p class="text-muted mb-0"><i class="mdi mdi-ethereum text-primary fs-14"></i> 13,156 ETH</p>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown float-end">
-                                            <button class="btn btn-ghost-primary btn-icon dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ri-more-fill align-middle fs-16"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item view-item-btn" href="javascript:void(0);">Share</a></li>
-                                                <li><a class="dropdown-item edit-item-btn" href="#!" data-bs-toggle="modal">Report</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-shink-0">
-                                        <img src="assets/images/nft/gif/img-5.gif" alt="" class="avatar-sm object-cover rounded">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <a href="pages-profile.html">
-                                            <h5 class="mb-1">Herbert Stokes</h5>
-                                        </a>
-                                        <p class="text-muted mb-0"><i class="mdi mdi-ethereum text-primary fs-14"></i> 34,754 ETH</p>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown float-end">
-                                            <button class="btn btn-ghost-primary btn-icon dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ri-more-fill align-middle fs-16"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item view-item-btn" href="javascript:void(0);">Share</a></li>
-                                                <li><a class="dropdown-item edit-item-btn" href="#!" data-bs-toggle="modal">Report</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-shink-0">
-                                        <img src="assets/images/users/avatar-8.jpg" alt="" class="avatar-sm object-cover rounded">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <a href="pages-profile.html">
-                                            <h5 class="mb-1">Michael Morris</h5>
-                                        </a>
-                                        <p class="text-muted mb-0"><i class="mdi mdi-ethereum text-primary fs-14"></i> 13,841 ETH</p>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown float-end">
-                                            <button class="btn btn-ghost-primary btn-icon dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ri-more-fill align-middle fs-16"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item view-item-btn" href="javascript:void(0);">Share</a></li>
-                                                <li><a class="dropdown-item edit-item-btn" href="#!" data-bs-toggle="modal">Report</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-shink-0">
-                                        <img src="assets/images/nft/img-02.jpg" alt="" class="avatar-sm object-cover rounded">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <a href="pages-profile.html">
-                                            <h5 class="mb-1">James Morris</h5>
-                                        </a>
-                                        <p class="text-muted mb-0"><i class="mdi mdi-ethereum text-primary fs-14"></i> 63,710 ETH</p>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown float-end">
-                                            <button class="btn btn-ghost-primary btn-icon dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ri-more-fill align-middle fs-16"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item view-item-btn" href="javascript:void(0);">Share</a></li>
-                                                <li><a class="dropdown-item edit-item-btn" href="#!" data-bs-toggle="modal">Report</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-                </div>
-            </div><!-- end container -->
-        </section><!-- end Work Process -->
-
-        <!-- start cta -->
-        <section class="py-5 bg-primary position-relative">
-            <div class="bg-overlay bg-overlay-pattern opacity-50"></div>
-            <div class="container">
-                <div class="row align-items-center gy-4">
-                    <div class="col-sm">
-                        <div>
-                            <h4 class="text-white mb-0 fw-semibold">Create and Sell Your NFT's</h4>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                    <div class="col-sm-auto">
-                        <div>
-                            <a href="apps-nft-create.html" class="btn bg-gradient btn-danger">Create NFT</a>
-                            <a href="apps-nft-explore.html" class="btn bg-gradient btn-info">Discover More</a>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                </div>
-                <!-- end row -->
-            </div>
-            <!-- end container -->
-        </section>
-        <!-- end cta -->
-
-        <!-- Start footer -->
-        <footer class="custom-footer bg-dark py-5 position-relative">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 mt-4">
-                        <div>
-                            <div>
-                                <img src="assets/images/logo-light.png" alt="logo light" height="17">
-                            </div>
-                            <div class="mt-4">
-                                <p>Premium Multipurpose Admin & Dashboard Template</p>
-                                <p>You can build any type of web application like eCommerce, CRM, CMS, Project management apps, Admin Panels, etc using Velzon.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-7 ms-lg-auto">
-                        <div class="row">
-                            <div class="col-sm-4 mt-4">
-                                <h5 class="text-white mb-0">Company</h5>
-                                <div class="text-muted mt-3">
-                                    <ul class="list-unstyled ff-secondary footer-list">
-                                        <li><a href="pages-profile.html">About Us</a></li>
-                                        <li><a href="pages-gallery.html">Gallery</a></li>
-                                        <li><a href="apps-projects-overview.html">Projects</a></li>
-                                        <li><a href="pages-timeline.html">Timeline</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-4 mt-4">
-                                <h5 class="text-white mb-0">Apps Pages</h5>
-                                <div class="text-muted mt-3">
-                                    <ul class="list-unstyled ff-secondary footer-list">
-                                        <li><a href="pages-pricing.html">Calendar</a></li>
-                                        <li><a href="apps-mailbox.html">Mailbox</a></li>
-                                        <li><a href="apps-chat.html">Chat</a></li>
-                                        <li><a href="apps-crm-deals.html">Deals</a></li>
-                                        <li><a href="apps-tasks-kanban.html">Kanban Board</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-4 mt-4">
-                                <h5 class="text-white mb-0">Support</h5>
-                                <div class="text-muted mt-3">
-                                    <ul class="list-unstyled ff-secondary footer-list">
-                                        <li><a href="pages-faqs.html">FAQ</a></li>
-                                        <li><a href="pages-faqs.html">Contact</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row text-center text-sm-start align-items-center mt-5">
-                    <div class="col-sm-6">
-
-                        <div>
-                            <p class="copy-rights mb-0">
-                                <script> document.write(new Date().getFullYear()) </script> © Velzon - Themesbrand
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end mt-3 mt-sm-0">
-                            <ul class="list-inline mb-0 footer-social-link">
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-facebook-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-github-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-linkedin-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-google-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-dribbble-line"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
+                        <div class="text-center mb-2">
+                            <i class="bi bi-chat-square-quote-fill"></i>
+                            <h2 class="mb-3 fw-semibold lh-base">¡Tu opinión nos importa!</h2>
+                            <p class="text-muted">Tu opinión nos ayuda a volar más alto.</p>
+                            <a href="https://maps.app.goo.gl/4jtC6ESecFzHeweeA"
+                                class="btn btn-primary btn-login m-2 px-3" target="_blank">
+                                Ir a Google Map
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </footer>
-        <!-- end footer -->
+        </section>
+
+        <!-- EDIFICIOS -->
+        <section id="instalaciones" class="services section">
+            <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                <div class="row gy-5">
+                    <div class="col-12 text-center" data-aos="fade-up" data-aos-delay="200">
+                        <h3 class="fw-bold">Instalaciones</h3>
+                    </div>
+                    {{-- --- edificio 1 --- --}}
+                    <div class="col-12 aos-init aos-animate">
+                        <div class="service-block" data-aos="fade-up" data-aos-delay="200">
+                            <div class="service-content">
+                                <div class="service-number">01</div>
+                                <div class="service-info">
+                                    <h4>Aeronáutica Civil</h4>
+                                    <p>
+                                        El museo presenta los inicios de la aviación en Uruguay,
+                                        destacando a sus pioneros, primeras aeronaves, aeropuertos
+                                        y compañías aéreas, junto a figuras nacionales e internacionales
+                                        que marcaron su historia.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/images/edificios/Sala civil.png')}}" alt="Buy Dream Home" class="img-fluid">
+                                <div class="image-overlay">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- --- edificio 2.1 --- --}}
+                    <div class="col-12 aos-init aos-animate">
+                        <div class="service-block" data-aos="fade-up" data-aos-delay="200">
+                            <div class="service-content">
+                                <div class="service-number">2.1</div>
+                                <div class="service-info">
+                                    <h4>Aeronáutica Militar y Naval</h4>
+                                    <p>
+                                        El edificio dedicado a la aeronáutica militar
+                                        y naval recorre la historia del vuelo militar
+                                        en Uruguay, homenajeando a sus principales
+                                        precursores y destacando hitos como la misión antártica
+                                        “Antarkos I”. También presenta la evolución de la
+                                        Aeronáutica Naval, misiones de paz de la ONU, uniformes,
+                                        equipamiento histórico y una valiosa colección de maquetas
+                                        de la aviación nacional y mundial.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/images/edificios/Sala militar 1.png')}}" alt="Buy Dream Home" class="img-fluid">
+                                <div class="image-overlay">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- --- edificio 2.2 --- --}}
+                    <div class="col-12 aos-init aos-animate">
+                        <div class="service-block" data-aos="fade-up" data-aos-delay="200">
+                            <div class="service-content">
+                                <div class="service-number">2.2</div>
+                                <div class="service-info">
+                                    <h4>Espacial "De la Tierra a las estrellas"</h4>
+                                    <p>
+                                        La sala “De la Tierra a las estrellas” propone un
+                                        recorrido académico por los avances que llevaron a
+                                        la humanidad al espacio, desde sus primeros precursores
+                                        hasta los grandes hitos de la exploración espacial.
+                                        Incluye maquetas, paneles informativos y la participación
+                                        de Uruguay en el ámbito espacial, además de piezas
+                                        destacadas como una bandera nacional que viajó a la
+                                        Luna en la misión Apolo XI, fragmentos de roca lunar y
+                                        autógrafos de astronautas, junto a una línea de tiempo
+                                        con los principales logros hasta la exploración de Marte.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/images/edificios/sala espacial.png')}}" alt="Buy Dream Home" class="img-fluid">
+                                <div class="image-overlay">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- --- edificio 3 --- --}}
+                    <div class="col-12 aos-init aos-animate">
+                        <div class="service-block" data-aos="fade-up" data-aos-delay="200">
+                            <div class="service-content">
+                                <div class="service-number">03</div>
+                                <div class="service-info">
+                                    <h4>Hangar de aeronaves</h4>
+                                    <p>
+                                        El recorrido presenta la historia del vuelo a través
+                                        de paneles y piezas históricas, junto a una destacada
+                                        exhibición de aeronaves civiles y militares, desde una
+                                        réplica del Blériot XI de 1910 hasta un IA-58 Pucará. Incluye
+                                        helicópteros, motores, hélices, instrumentos de vuelo, la
+                                        primera pantalla de radar del país y diversos equipos
+                                        históricos, además de simuladores y un espacio dedicado
+                                        al accidente de los Andes de 1972 y a la exploración espacial.
+                                        En el hangar también se encuentra el Espacio de las Telecomunicaciones
+                                        de Antel, que muestra la evolución de las TIC.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/images/edificios/sala espacial.png')}}" alt="Buy Dream Home" class="img-fluid">
+                                <div class="image-overlay">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        @include('layouts.landing.footer-main')
 
     </div>
     <!-- end layout wrapper -->
@@ -1063,7 +419,15 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
-
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 900,     // duración de la animación
+            easing: 'ease-out',
+            once: true,        // anima solo una vez (ideal para hero)
+            offset: 120
+        });
+    </script>
 </body>
 
 </html>

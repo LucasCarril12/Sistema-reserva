@@ -6,7 +6,8 @@ use App\Http\Controllers\{
     UserController,
     ReservationController,
     EventController,
-    EventImageController
+    EventImageController,
+    AeronaveController
 };
 
 // Home pública
@@ -29,9 +30,12 @@ Route::resource('usuarios', UserController::class)->middleware('auth');
 
 // Eventos
 Route::resource('events', EventController::class)->middleware('auth');
+//Borrar eventos
+Route::delete(
+    '/event-images/{image}',
+    [EventController::class, 'destroyImage']
+)->name('events.images.destroy');
 
-// Imágenes de eventos (anidadas)
-Route::resource('events.images', EventImageController::class)->middleware('auth');
 
 // Reservas
 Route::resource('reservations', ReservationController::class)
@@ -47,13 +51,16 @@ Route::get('/guia/calendario', function(){ return view('guia.calendario'); })->m
 Route::get('/cliente/calendario', function(){ return view('cliente.calendario'); })->middleware('auth')->name('cliente.calendario');
 
 Route::get('administrador/fullcalendar', [ReservationController::class, 'getAllReservations'])
-    ->name('administrador.fullcalendar');
+    ->name('administrador.fullcalendar')
+    ->middleware('auth');
 
 Route::get('guia/fullcalendar', [ReservationController::class, 'getAllReservations'])
-    ->name('guia.fullcalendar');
+    ->name('guia.fullcalendar')
+    ->middleware('auth');
 
 Route::get('cliente/fullcalendar', [ReservationController::class, 'getAllReservationsCliente'])
-    ->name('cliente.fullcalendar');
+    ->name('cliente.fullcalendar')
+    ->middleware('auth');
 
 // Cliente
 Route::get('cliente/reservas', [ReservationController::class, 'indexCliente'])
@@ -64,6 +71,10 @@ Route::get('cliente/reserva', [ReservationController::class, 'createCliente'])
 
 Route::post('cliente/reserva', [ReservationController::class, 'storeCliente'])
     ->name('cliente.reserva.store');
+
+//Aeronaves
+Route::get('/aeronaves', [AeronaveController::class, 'index'])->name('aeronaves.index');
+
 
 // Disponibilidad por fecha y días completamente ocupados
 Route::get('reservations/availability', [ReservationController::class, 'availability'])
