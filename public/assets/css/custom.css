@@ -109,10 +109,26 @@ html, body {
   background: #ffffff;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease;
+  min-height: 150px;
+  width: 100%;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
+}
+
+a .stat-card {
+  display: flex;
+}
+
+a[href] > .stat-card {
+  width: 100%;
+}
+
+.col-12 a, .col-md-6 a {
+  display: flex;
+  width: 100%;
+  text-decoration: none;
 }
 
 /* Variante azul */

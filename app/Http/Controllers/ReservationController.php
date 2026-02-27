@@ -343,6 +343,9 @@ class ReservationController extends Controller
         $reservation->cancellation_reason = $request->cancellation_reason;
         $reservation->save();
 
+        // enviar correo de cancelación al usuario si existe email
+        $this->sendCancellationEmail($reservation, $request->cancellation_reason);
+
         return response()->json([
             'success' => true,
             'message' => 'La reserva ha sido cancelada exitosamente',
@@ -632,6 +635,160 @@ class ReservationController extends Controller
         } catch (Exception $e) {
             Log::error('Error enviando mail de reserva', [
                 'error' => $mail->ErrorInfo ?? $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Enviar email de cancelación a usuario
+     */
+    private function sendCancellationEmail(Reservation $reservation, string $reason)
+    {
+        $reservation->load(['detail', 'user']);
+
+        if (!$reservation->user || !$reservation->user->email) {
+            return;
+        }
+
+        $data = [
+            'userName' => $reservation->user->nombres,
+            'reservationDate' => $reservation->reservation_date,
+            'start_time' => $reservation->start_time,
+            'reason' => $reason,
+        ];
+
+        $html = view('emails.reserva_cancelada', $data)->render();
+
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = env('MAIL_USERNAME');
+            $mail->Password   = env('MAIL_PASSWORD');
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->CharSet  = 'UTF-8';
+            $mail->Encoding = 'base64';
+
+            $mail->setFrom(env('MAIL_FROM_ADDRESS'), 'Museo Aeronáutico');
+            $mail->addAddress($reservation->user->email);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Su visita fue cancelada';
+            $mail->Body    = $html;
+
+            $mail->send();
+        } catch (Exception $e) {
+            Log::error('Error enviando mail de cancelación', [
+                'error' => $mail->ErrorInfo ?? $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Enviar un correo de recordatorio un día antes de la visita
+     *
+     * Este método reutiliza la misma configuración que los otros correos y
+     * se puede invocar desde un comando programado.
+     */
+    public function sendReminderEmail(Reservation $reservation)
+    {
+        $reservation->load(['detail', 'user']);
+
+        if (!$reservation->user || !$reservation->user->email) {
+            return;
+        }
+
+        $data = [
+            'userName' => $reservation->user->nombres,
+            'nombre_responsable' => $reservation->detail->nombre_responsable ?? null,
+            'telefono' => $reservation->detail->telefono ?? null,
+            'reservationDate' => $reservation->reservation_date,
+            'start_time' => $reservation->start_time,
+            'sala' => $reservation->detail->sala ?? null,
+            'observations' => $reservation->detail->obs ?? null,
+        ];
+
+        $html = view('emails.reserva_recordatorio', $data)->render();
+
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = env('MAIL_USERNAME');
+            $mail->Password   = env('MAIL_PASSWORD');
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->CharSet  = 'UTF-8';
+            $mail->Encoding = 'base64';
+
+            $mail->setFrom(env('MAIL_FROM_ADDRESS'), 'Museo Aeronáutico');
+            $mail->addAddress($reservation->user->email);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Recordatorio de su visita al Museo Aeronáutico';
+            $mail->Body    = $html;
+
+            $mail->send();
+        } catch (Exception $e) {
+            Log::error('Error enviando mail de recordatorio', [
+                'error' => $mail->ErrorInfo ?? $e->getMessage(),
+                'reservation_id' => $reservation->id,
+            ]);
+        }
+    }
+
+    /**
+     * Enviar un correo de seguimiento al día siguiente de la visita
+     *
+     * Pide feedback y ofrece un mapa de ubicación.
+     */
+    public function sendFollowupEmail(Reservation $reservation)
+    {
+        $reservation->load(['detail', 'user']);
+
+        if (!$reservation->user || !$reservation->user->email) {
+            return;
+        }
+
+        $data = [
+            'userName' => $reservation->user->nombres,
+            'reservationDate' => $reservation->reservation_date,
+            'start_time' => $reservation->start_time,
+            'feedbackLink' => 'https://share.google/GSo0d4b9fkqtUUbu7',
+        ];
+
+        $html = view('emails.reserva_feedback', $data)->render();
+
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = env('MAIL_USERNAME');
+            $mail->Password   = env('MAIL_PASSWORD');
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->CharSet  = 'UTF-8';
+            $mail->Encoding = 'base64';
+
+            $mail->setFrom(env('MAIL_FROM_ADDRESS'), 'Museo Aeronáutico');
+            $mail->addAddress($reservation->user->email);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Gracias por visitarnos – necesitamos tu opinión';
+            $mail->Body    = $html;
+
+            $mail->send();
+        } catch (Exception $e) {
+            Log::error('Error enviando mail de seguimiento', [
+                'error' => $mail->ErrorInfo ?? $e->getMessage(),
+                'reservation_id' => $reservation->id,
             ]);
         }
     }

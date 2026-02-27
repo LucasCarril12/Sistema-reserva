@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     AeronaveController,
     Faqs
 };
+use App\Http\Controllers\Auth\TwoFactorController;
 
 // Home pública
 Route::get('/', [EventController::class, 'publicIndex'])->name('welcome');
@@ -28,6 +29,19 @@ Route::middleware('auth')->group(function () {
 
 // Usuarios
 Route::resource('usuarios', UserController::class)->middleware('auth');
+
+// ::: 2FA :::
+Route::get('/two-factor', [TwoFactorController::class, 'index'])
+    ->name('2fa.verify');
+
+Route::post('/two-factor', [TwoFactorController::class, 'store'])
+    ->name('2fa.store');
+
+Route::post('/two-factor/resend', [TwoFactorController::class, 'resend'])
+    ->name('2fa.resend');
+
+Route::post('/two-factor/cancel', [TwoFactorController::class, 'cancel'])
+    ->name('2fa.cancel');
 
 // Eventos
 Route::resource('events', EventController::class)->middleware('auth');

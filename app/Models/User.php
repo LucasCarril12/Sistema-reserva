@@ -37,6 +37,8 @@ class User extends Authenticatable
         'rol_id',
         'password',
         'ci',
+        'two_factor_code',
+        'two_factor_expires_at',
     ];
 
 
@@ -66,6 +68,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'two_factor_expires_at' => 'datetime',
     ];
 
     //RELACIONES CON OTROS MODELOS

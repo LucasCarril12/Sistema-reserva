@@ -81,6 +81,8 @@
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             buttonText: {
+                prev: '<',
+                next: '>',
                 today: 'Hoy',
                 month: 'Mes',
                 week: 'Semana',

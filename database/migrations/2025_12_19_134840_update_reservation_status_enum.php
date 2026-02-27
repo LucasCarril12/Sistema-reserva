@@ -11,26 +11,32 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE reservations
-            MODIFY reservation_status ENUM(
-                'pendiente',
-                'confirmada',
-                'realizada',
-                'cancelada'
-            )
-        ");
+        // SQLite doesn't support modifying enum columns via raw SQL, so only
+        // run this statement when using a driver that supports it (e.g. MySQL).
+        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE reservations
+                MODIFY reservation_status ENUM(
+                    'pendiente',
+                    'confirmada',
+                    'realizada',
+                    'cancelada'
+                )
+            ");
+        }
     }
 
     public function down()
     {
-        DB::statement("
-            ALTER TABLE reservations
-            MODIFY reservation_status ENUM(
-                'pendiente',
-                'confirmada',
-                'cancelada'
-            )
-        ");
+        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+            DB::statement("
+                ALTER TABLE reservations
+                MODIFY reservation_status ENUM(
+                    'pendiente',
+                    'confirmada',
+                    'cancelada'
+                )
+            ");
+        }
     }
 
 };

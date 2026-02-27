@@ -28,9 +28,6 @@
             </div>
             <div class="card-body position-relative">
                 <div id="calendar"></div>
-                <div id="calendarLoader" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(255,255,255,0.8); z-index:1000; display:none;">
-                    <div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div>
-                </div>
 
                 <!-- Modal para detalles de reserva -->
                 <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
@@ -80,24 +77,94 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const calendarEl = document.getElementById('calendar');
-    const loader = document.getElementById('calendarLoader');
-
-    // Helper para controlar loading desde nuestro código
-    function setLoading(val){
-        if (loader) loader.style.display = val ? 'flex' : 'none';
-        try {
-            if (calendar && typeof calendar.setLoading === 'function') calendar.setLoading(val);
-        } catch(e){}
-    }
-
+    let calendar;
     if (!calendarEl) return;
     // =========================
     // INICIALIZAR CALENDARIO (MÍNIMO - evitar DOM mutations en eventDidMount)
     // =========================
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+    // Calcular ventana deshabilitada: desde hoy hasta 10 días después (inclusive)
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const disabledWindowEnd = new Date(today);
+    disabledWindowEnd.setDate(disabledWindowEnd.getDate() + 10);
+    disabledWindowEnd.setHours(23,59,59,999);
+
+    calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'es',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        buttonText: {
+            prev: '<',
+            next: '>',
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día'
+        },
         events: '{{ route("administrador.fullcalendar") }}',
+
+        eventDidMount: function(info) {
+            if (info.event.backgroundColor) {
+                info.el.style.backgroundColor = info.event.backgroundColor;
+            }
+            if (info.event.borderColor) {
+                info.el.style.borderColor = info.event.borderColor;
+            }
+
+            // botón + para ver detalles
+            var plusBtn = document.createElement('button');
+            plusBtn.type = 'button';
+            plusBtn.className = 'btn btn-sm btn-light fc-plus-btn';
+            plusBtn.innerText = '+';
+            plusBtn.style.marginLeft = '6px';
+            plusBtn.addEventListener('click', function(e){
+                e.stopPropagation();
+                showReservationDetails(info.event);
+            });
+            info.el.appendChild(plusBtn);
+        },
+
+        eventClick: function(info){
+            showReservationDetails(info.event);
+        },
+
+        selectable: true,
+        // Visual cues para fines de semana y la ventana deshabilitada
+        dayCellClassNames: function(arg){
+            const classes = [];
+            const dow = arg.date.getDay(); // 0 Domingo, 6 Sábado
+            const d = new Date(arg.date);
+            d.setHours(0,0,0,0);
+            if (dow === 0 || dow === 6) classes.push('fc-weekend-disabled');
+            if (d >= today && d <= disabledWindowEnd) classes.push('fc-disabled-window');
+            return classes;
+        },
+
+        dateClick: function(info){
+            const clicked = new Date(info.date);
+            clicked.setHours(0,0,0,0);
+
+            // No permitir fines de semana
+            const dow = clicked.getDay();
+            if (dow === 0 || dow === 6){
+                showAlert('No se permiten sábados ni domingos para reservas.', 'danger');
+                return;
+            }
+
+            // No permitir fechas entre hoy y +10 días
+            if (clicked >= today && clicked <= disabledWindowEnd){
+                showAlert('Las fechas desde hoy y los próximos 10 días están deshabilitadas.', 'danger');
+                return;
+            }
+
+            // Fecha válida -> redirigir al formulario de reserva con query param
+            const dateStr = clicked.toISOString().split('T')[0];
+            window.location.href = '{{ route("cliente.reserva") }}?date=' + dateStr;
+        }
     });
 
     // Nota: los bloques que manipulaban el DOM en eventDidMount y manejaban eventClick
@@ -116,6 +183,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Renderizar
     calendar.render();
+
+    // Agregar estilos para las celdas deshabilitadas
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .fc-weekend-disabled {
+            background-color: rgba(220,53,69,0.07) !important;
+        }
+        .fc-disabled-window {
+            background-color: rgba(108,117,125,0.08) !important;
+        }
+        .calendar-alert {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1100;
+            width: auto;
+            max-width: 80%;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Función para mostrar alertas temporales dentro del contenedor del calendario
+    function showAlert(message, type = 'info'){
+        // Remover alertas previas
+        const existing = document.querySelector('.calendar-alert');
+        if (existing) existing.remove();
+
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-' + type + ' calendar-alert';
+        alert.role = 'alert';
+        alert.innerText = message;
+
+        const container = calendarEl.closest('.card-body') || document.body;
+        container.appendChild(alert);
+
+        setTimeout(()=>{ alert.classList.add('fade'); alert.remove(); }, 3500);
+    }
 
 
     // =========================
@@ -168,6 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <p><strong>Total niños:</strong> ${detail.total_ninios ?? '—'}</p>
             <p><strong>Dirección:</strong> ${detail.direccion || '—'}</p>
             <p><strong>Observaciones:</strong> ${detail.obs || '—'}</p>
+            <p><strong>Motivo de cancelación:</strong> ${props.cancellation_reason || '—'}</p>
         `;
 
         const editLink = modalEl.querySelector('#openReservationEdit');

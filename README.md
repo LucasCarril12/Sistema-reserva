@@ -73,3 +73,16 @@ Setup reminder:
 - Run `php artisan storage:link` to make uploaded images accessible via `storage/`.
 - Uploaded images are stored using `Storage::disk('public')->putFile` under the `events` folder (path saved in `event_images.image_path`).
 
+### Recordatorios por correo
+
+Se agregó una tarea programada que manda un e-mail a cada usuario un día antes de su reserva confirmada. Para activarla debes:
+
+1. Asegurarte de tener configurado el correo en `.env` (`MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`, etc.).
+2. Añadir el comando de scheduler a crontab o iniciar el planificador manualmente:
+   ```bash
+   * * * * * cd /ruta/al/proyecto && php artisan schedule:run >> /dev/null 2>&1
+   ```
+   o ejecutar `php artisan reservations:send-reminders` para probarla en cualquier momento.
+
+El correo utiliza la plantilla `resources/views/emails/reserva_recordatorio.blade.php`.
+

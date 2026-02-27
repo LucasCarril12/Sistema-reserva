@@ -75,11 +75,13 @@
             initialView: 'dayGridMonth',
             locale: 'es',
             headerToolbar: {
-                left: 'prev,next today',
+                left: 'prev',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                right: 'next'
             },
             buttonText: {
+                prev: '<',
+                next: '>',
                 today: 'Hoy',
                 month: 'Mes',
                 week: 'Semana',

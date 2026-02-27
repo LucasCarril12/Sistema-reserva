@@ -88,7 +88,7 @@
                                             </div>
                                             <div class="stat-info">
                                                 <h3>FAQs</h3>
-                                                <p>Preguntas frecuentes</p>
+                                                <p>Preguntas frecuentes<br></p>
                                             </div>
                                         </div>
                                     </a>

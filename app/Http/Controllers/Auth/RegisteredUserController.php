@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\TwoFactorCodeNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -70,10 +71,23 @@ class RegisteredUserController extends Controller
             'rol_id'=> 3,
         ]);
 
-        event(new Registered($user));
+        // Generar código 6 dígitos para verificación
+        $code = random_int(100000, 999999);
 
-        Auth::login($user);
+        // Guardar código y expiración
+        $user->update([
+            'two_factor_code' => $code,
+            'two_factor_expires_at' => now()->addMinutes(10),
+        ]);
 
-        return redirect(route('dashboard', absolute: false));
+        // Enviar código por email
+        $user->notify(new TwoFactorCodeNotification($code));
+
+        // Guardar ID en sesión y tipo de operación (registro)
+        $request->session()->put('2fa_user_id', $user->id);
+        $request->session()->put('2fa_type', 'registration');
+
+        // Redirigir a pantalla de verificación
+        return redirect()->route('2fa.verify');
     }
 }

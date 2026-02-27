@@ -11,7 +11,7 @@
     <div class="pt-4 mb-4 mb-lg-3 pb-lg-4">
         <div class="row g-4">
             <div class="col-auto">
-                <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('assets/images/users/multi-user.jpg') }}" alt="user-img" class="img-thumbnail rounded-circle avatar-md rounded-circle object-cover" />
+                <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('assets/images/users/user-dummy-img.jpg') }}" alt="user-img" class="img-thumbnail rounded-circle avatar-md rounded-circle object-cover" />
             </div>
             <!--end col-->
             <div class="col">

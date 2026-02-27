@@ -60,8 +60,8 @@
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
 
-                            <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('assets/images/users/multi-user.jpg') }}" alt="user-img" class="rounded-circle header-profile-user rounded-circle object-cover" />
-                            
+                            <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('assets/images/users/user-dummy-img.jpg') }}" alt="user-img" class="rounded-circle header-profile-user rounded-circle object-cover" />
+
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::user()->nombres }} {{ Auth::user()->apellidos }}</span> {{-- Llamo a la peronsa por su nombre --}}
                                 <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">{{ Auth::user()->email }}</span>

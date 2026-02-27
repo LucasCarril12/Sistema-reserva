@@ -267,12 +267,21 @@
 </script>
 
 <script>
-    // Obtener fecha mínima (hoy + 10 días)
+    // Obtener fecha mínima (hoy + 9 días)
     const today = new Date();
-    const minDate = new Date();
-    minDate.setDate(today.getDate() + 9);
+    today.setHours(0,0,0,0);
+    const minDate = new Date(today);
+    minDate.setDate(minDate.getDate() + 9);
 
-    // Formatear YYYY-MM-DD
+    // Helper: parsear YYYY-MM-DD como fecha LOCAL (evita desfases por UTC)
+    function parseLocalDate(value){
+        if(!value) return null;
+        const parts = value.split('-').map(Number);
+        if(parts.length !== 3) return new Date(value);
+        return new Date(parts[0], parts[1]-1, parts[2]);
+    }
+
+    // Formatear YYYY-MM-DD (usando toISOString en UTC está bien para el input.min)
     const formatDate = (date) => {
         return date.toISOString().split('T')[0];
     };
@@ -282,7 +291,9 @@
 
     // Validar cuando el usuario cambie la fecha
     input.addEventListener('change', function () {
-        const selected = new Date(this.value);
+        const selected = parseLocalDate(this.value);
+        if(!selected){ this.value = ''; return; }
+        selected.setHours(0,0,0,0);
         const day = selected.getDay(); // 0 = Domingo, 6 = Sábado
 
         // 1. Verificar si es antes del mínimo
@@ -310,7 +321,6 @@
             this.value = "";
             return;
         }
-
         // 3. Consultar disponibilidad por fecha y deshabilitar horas llenas
         fetch(`{{ route('reservations.availability') }}?reservation_date=${this.value}`, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -458,7 +468,9 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
         timeSelect.value = '';
 
-        const selected = new Date(this.value);
+        const selected = parseLocalDate(this.value);
+        if(!selected){ this.value = ''; return; }
+        selected.setHours(0,0,0,0);
         const day = selected.getDay(); // 0 dom - 6 sab
 
         // fecha inválida
