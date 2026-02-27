@@ -1,10 +1,10 @@
 <footer class="bg-light pt-5 pb-4" aria-label="Nuestra historia y contacto">
     <div class="container">
-        <div class="row align-items-center g-5">
+        <div class="row align-items-center g-5 contenedor-footer">
             <!-- Columna Texto -->
             <div class="col-lg-6" data-aos="fade-right" data-aos-duration="300">
                 <img src="{{ asset('assets/images/logo.png')}}" alt="Logo Museo Aeronáutico"
-                    class="mb-4" style="width:100px;">
+                    class="mb-4 logo_museo" style="width:100px;">
 
                 <h2 class="fw-bold mb-3">Nuestra historia</h2>
 
@@ -33,11 +33,5 @@
                 </div>
             </div>
         </div>
-
-        <!-- Línea inferior -->
-        <div class="text-center pt-4 mt-5 border-top small text-muted" data-aos="fade-up">
-            © {{ date('Y') }} Museo Aeronáutico – Todos los derechos reservados.
-        </div>
-
     </div>
 </footer>

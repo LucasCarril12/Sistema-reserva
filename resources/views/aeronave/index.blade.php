@@ -36,9 +36,9 @@
 </head>
 <body>
     <div class="layout-wrapper landing bg-welcome-color">
-        <section class="section" id="hero" style="background-image: url('{{ asset('assets/images/edificios/header-aeronaves.jpg') }}'); background-size: cover; background-position: center;">
+        <section class="section" id="hero" style="background-image: url('{{ asset('assets/images/aeronaves/header-aeronaves.png') }}'); background-size: cover; background-position: center;">
             @include('layouts.landing.navbar')
-            <div class="bg-overlay" style="background-color: black;opacity:0.6"></div> <!-- oscuridad -->
+            <div class="bg-overlay" style="background-color: black;opacity:0.3"></div> <!-- oscuridad -->
         </section>
 
         <section id="Aeronaves" class="latest-posts section">
@@ -49,497 +49,503 @@
             </div><!-- End Section Title -->
             {{-- --- card de aeronave --- --}}
             <div class="container aos-init aos-animate mt-5" data-aos="fade-up" data-aos-delay="100">
+                    <!-- search/filter bar -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Buscar aeronave...">
+                        </div>
+                    </div>
                 <div class="row gy-4">
-                    {{-- --- AVION 1 --- --}}
+                    {{-- --- El Palomar --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/farman 50hp.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
                             <p class="post-category">“El palomar”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Farman 50hp
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/farman50hp') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 2 --- --}}
+                    {{-- De Havilland DH-82A --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/De Havilland DH 82A.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Tiger Moth”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                De Havilland DH-82A
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/de_havilland_dh_82a') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 3 --- --}}
+                    {{-- --- Fairchild PT-19 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Fairchild PT-19.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Cornell”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Fairchild PT-19
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/fairchild_pt-19') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 4 --- --}}
+                    {{-- --- Stinson 108-3 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Stinson 108-3.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Voyager”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Stinson 108-3
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/stinson_108-3') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 5 --- --}}
+                    {{-- --- Blériot XI --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/bleriot xi.jpeg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">(Réplica)</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Blériot XI
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/bleriot_xi') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 6 --- --}}
+                    {{-- --- Beechcraft AT-11 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/beechcraft at-11.jpeg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Kansan”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Beechcraft AT-11
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/beechcraft_at-11') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 7 --- --}}
+                    {{-- --- Curtiss SNC-1 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/curtiss SNC-1.jpeg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Falcon”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Curtiss SNC-1
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/Curtiss_SNC-1') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 8 --- --}}
+                    {{-- --- North American T-6G --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/north american t-6g.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Texan”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                North American T-6G
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/north_american_t-6g') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 9 --- --}}
+                    {{-- --- Lockheed F-80C --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Lockheed F-80C_1968_CBorucki.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Shooting star”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Lockheed F-80C
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/lockheed_f-80c') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 10 --- --}}
+                    {{-- --- Lockheed T-33A --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/lockheed t-33A.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“T-bird”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Lockheed T-33A
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/lockheed_t-33a') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 11 --- --}}
+                    {{-- ---Bell UH-1B --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/bell UH-1B.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Iroquois”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Bell UH-1B
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/bell_uh-1b') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 12 --- --}}
+                    {{-- --- Castaibert --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/CASTAIBERT.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">70hp</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Castaibert
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/castaibert') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 13 --- --}}
+                    {{-- --- North American B-25J --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/NORTH AMERICAN B25J.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Mitchell”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                               North American B-25J
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/north_american_b-25j') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 14 --- --}}
+                    {{-- --- Piper AE-1 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Piper AE-1.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">-</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Piper AE-1
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/piper_ae-1') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 15 --- --}}
+                    {{-- --- De Havilland DHC-1 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/dehavilland DHC-1.jpeg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Chipmunk”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                De Havilland DHC-1
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/de_havilland_dhc-1') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 16 --- --}}
+                    {{-- --- Beechcraft T-34B --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Beechcraft T-34B.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Mentor”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Beechcraft T-34B
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/beechcraft_t-34b') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 17 --- --}}
+                    {{-- --- North American/ Ryan NA-145 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/L-17B NAVION.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Navion”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                North American/ Ryan NA-145
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/north_american_ryan_na-145') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 18 --- --}}
+                    {{-- --- Grumman S-2G --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Grumman S-2.png') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Tracker”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Grumman S-2G
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/grumman_s-2g') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 19 --- --}}
+                    {{-- --- MBB (Bolköw) --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/MBB Bo.105_2007.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">BO-105 P1</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                MBB (Bolköw)
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/mbb') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 20 --- --}}
+                    {{-- --- Westland Wessex --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Westland Wessex HC Mk2.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">HC Mk2</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Westland Wessex
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/westland_wessex') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 21 --- --}}
+                    {{-- --- Hiller H-23F --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Hiller H-23f.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Raven”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Hiller H-23F
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/hiller_h-23f') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 22 --- --}}
+                    {{-- --- Curtiss-Wright P-3A --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/CURTIS-WRIGHT P-3A.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Dehmel”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Curtiss-Wright P-3A
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/curtiss_wright_p-3a') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 23 --- --}}
+                    {{-- --- FMA IA-58A --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/fma ia-s8a.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Pucará”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                FMA IA-58A
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/fma_ia-58a') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 24 --- --}}
+                    {{-- --- Cessna T-41D --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Cessna T-41D en 1983.png') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Mescalero”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Cessna T-41D
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/cessna_t-41d') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 25 --- --}}
+                    {{-- --- Cessna U-17A --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/cessna u-17a.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Skywagon”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Cessna U-17A
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/cessna_u-17a') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 26 --- --}}
+                    {{-- --- Thompson Bros P505 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/THOMPSON BROS.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">Mk V</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Thompson Bros P505
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/thomson_bros') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
@@ -548,119 +554,156 @@
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/embraer emb-110c.png') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Bandeirante”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Embraer EMB-110C (C-95)
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/embraer_emb-110c') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 28 --- --}}
+                    {{-- --- LET L-13 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/let l-13.png') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Blanik”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                LET L-13
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/let_l-13') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 29 --- --}}
+                    {{-- --- Cessna A-37 B --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/cessna a-37 b.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Dragonfly”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Cessna A-37 B
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/cessna_a-37_b') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 30 --- --}}
+                    {{-- --- Douglas C-47 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/douglas c47.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Skytrain” (Cabina)</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Douglas C-47
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/douglas_c-47') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 31 --- --}}
+                    {{-- --- Douglas DC-3/C-47 --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/Douglas DC-3-c-47.png') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">“Skytrain”</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Douglas DC-3/C-47
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/douglas_dc-3-c-47') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
 
-                    {{-- --- AVION 32 --- --}}
+                    {{-- --- Vickers Viscount --- --}}
                     <div class="col-lg-4">
                         <article>
                             <div class="post-img">
-                                <img src="{{ asset('assets/images/aeronaves/ejemplo-avion.jpg') }}" alt="Foto de avion" class="img-fluid">
+                                <img src="{{ asset('assets/images/aeronaves/vickers.jpg') }}" alt="Foto de avion" class="img-fluid">
                             </div>
 
-                            <p class="post-category">“El palomar”</p>
+                            <p class="post-category">V.827</p>
 
                             <h2 class="title">
-                                <a href="blog-details.html">Farman 50hp</a>
+                                Vickers Viscount
                             </h2>
 
                             <div class="d-flex align-items-center">
-                                <a href="#">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                                <a href="{{ url('aeronave/fichas/vickers_viscount') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                            </div>
+                        </article>
+                    </div>
+
+                    {{-- --- North American F-51D --- --}}
+                    <div class="col-lg-4">
+                        <article>
+                            <div class="post-img">
+                                <img src="{{ asset('assets/images/aeronaves/north american f-51d.jpg') }}" alt="Foto de avion" class="img-fluid">
+                            </div>
+
+                            <p class="post-category">“Mustang”</p>
+
+                            <h2 class="title">
+                                North American F-51D
+                            </h2>
+
+                            <div class="d-flex align-items-center">
+                                <a href="{{ url('aeronave/fichas/north_american_f-51d') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
+                            </div>
+                        </article>
+                    </div>
+
+                    {{-- --- Ultraliviano --- --}}
+                    <div class="col-lg-4">
+                        <article>
+                            <div class="post-img">
+                                <img src="{{ asset('assets/images/aeronaves/ultra liviano.jpg') }}" alt="Foto de avion" class="img-fluid">
+                            </div>
+
+                            <p class="post-category">Motorizado</p>
+
+                            <h2 class="title">
+                                Ultraliviano
+                            </h2>
+
+                            <div class="d-flex align-items-center">
+                                <a href="{{ url('aeronave/fichas/ultraliviano') }}">Ver Ficha<i class="bi bi-arrow-right-short fw-semibold"></i></a>
                             </div>
                         </article>
                     </div>
                 </div>
             </div>
         </section>
-        @include('layouts.landing.footer-main')
     </div>
 
     <!-- JAVASCRIPT -->
@@ -697,17 +740,29 @@
         });
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 900,     // duración de la animación
-            easing: 'ease-out',
-            once: true,        // anima solo una vez (ideal para hero)
-            offset: 120
-        });
-    </script>
-</body>
-</html>
+        <script>
+            // Filter aircraft cards based on search input (ignore case & accents)
+            document.addEventListener('DOMContentLoaded', function () {
+                const input = document.getElementById('searchInput');
+                const normalize = str => str
+                    .toLowerCase()
+                    .normalize('NFD')
+                    .replace(/\p{Diacritic}/gu, '');
+
+                input.addEventListener('input', function () {
+                    const query = normalize(this.value.trim());
+                    const cards = document.querySelectorAll('#Aeronaves .row.gy-4 > .col-lg-4');
+                    cards.forEach(card => {
+                        const titleEl = card.querySelector('.title');
+                        const categoryEl = card.querySelector('.post-category');
+                        const title = titleEl ? normalize(titleEl.textContent) : '';
+                        const category = categoryEl ? normalize(categoryEl.textContent) : '';
+                        if (query === '' || title.includes(query) || category.includes(query)) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        </script>

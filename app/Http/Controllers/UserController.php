@@ -43,7 +43,6 @@ class UserController extends Controller
         }
 
         //Creamos usuario
-
         User::create([
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
@@ -53,7 +52,6 @@ class UserController extends Controller
             'password' => Hash::make('12345678'), //Cuando se cree un usuario este tendra la contraseña "12345678" por defecto
             'foto' => $fotoPath,
             'ci' => $request->ci,
-
         ]);
 
         return redirect()->route('usuarios.index')->with('success_create','Registro creado correctamente');

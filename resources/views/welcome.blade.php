@@ -34,18 +34,18 @@
 
 </head>
 
-<body data-bs-spy="scroll" data-bs-target="#navbar-example">
+<body data-bs-spy="scroll" data-bs-target="#navbar-example" style="overflow: hidden;">
     <!-- Begin page -->
     <div class="layout-wrapper landing bg-welcome-color">
         <!-- start hero section -->
-        <section class="section" id="hero" style="background-image: url('{{ asset('assets/images/auth-one-bg.png') }}'); background-size: cover; background-position: center;">
+        <section class="section" id="hero" style="width:100%;background-image: url('{{ asset('assets/images/auth-one-bg.png') }}'); background-size: cover; background-position: center;">
             @include('layouts.landing.navbar')
             <div class="bg-overlay" style="background-color: black;opacity:0.6"></div> <!-- oscuridad -->
         </section>
         <!-- end hero section -->
 
         <!-- start wallet -->
-        <section class="section" id="wallet">
+        <section class="section" id="inicio">
             <div class="container" data-aos-delay="100">
                 <div class="row align-items-center gy-5">
                     <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
@@ -54,7 +54,7 @@
                                 <span class="tag-text">Pasado, presente y futuro del vuelo</span>
                             </div>
 
-                            <h1 class="hero-headline fw-bold" data-aos="fade-right" data-aos-delay="300">
+                            <h1 class="hero-headline fw-bold title-hero" data-aos="fade-right" data-aos-delay="300">
                                 Un viaje por la historia de la aviación
                             </h1>
 
@@ -81,27 +81,31 @@
                                 </div>
 
                                 <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                                    <div class="stat-card">
-                                        <div class="stat-icon">
-                                            <i class="bi bi-question-circle"></i>
+                                    <a href="{{ route('faqs')}}">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="bi bi-question-circle"></i>
+                                            </div>
+                                            <div class="stat-info">
+                                                <h3>FAQs</h3>
+                                                <p>Preguntas frecuentes</p>
+                                            </div>
                                         </div>
-                                        <div class="stat-info">
-                                            <h3>FAQs</h3>
-                                            <p>Preguntas frecuentes</p>
-                                        </div>
-                                    </div>
+                                    </a>
                                 </div>
 
                                 <div class="col-12" data-aos="fade-up" data-aos-delay="100">
-                                    <div class="stat-card">
-                                        <div class="stat-icon">
-                                            <i class="bi bi-calendar-event"></i>
+                                    <a href="{{ route('login') }}">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="bi bi-calendar-event"></i>
+                                            </div>
+                                            <div class="stat-info">
+                                                <h3>Visita guiada</h3>
+                                                <p>Agenda tu visita guiada</p>
+                                            </div>
                                         </div>
-                                        <div class="stat-info">
-                                            <h3>Visita guiada</h3>
-                                            <p>Agenda tu visita guiada</p>
-                                        </div>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +154,7 @@
                     <div class="col-lg-8">
                         <div class="text-center mb-2" data-aos="zoom-in">
                             <h2 class="fw-semibold" style="color: #006ED2;">Próximos eventos</h2>
-                            <p class="text-muted">Museo Aeronáutico Cnel. (Av.) Jaime Meregalli</p>
+                            <p class="text-muted subtitle-event">Museo Aeronáutico Cnel. (Av.) Jaime Meregalli</p>
                         </div>
                     </div><!-- end col -->
                 </div><!-- end row -->
@@ -238,20 +242,30 @@
         </section><!-- end features -->
 
         <!-- FEEDBACK USUARIO -->
-        <section class="section bg-light" id="categories">
-            <div class="container-fluid">
-                <div class="row justify-content-center" data-aos="zoom-in" data-aos-duration="300">
-                    <div class="col-lg-5">
-                        <div class="text-center mb-2">
-                            <i class="bi bi-chat-square-quote-fill"></i>
-                            <h2 class="mb-3 fw-semibold lh-base">¡Tu opinión nos importa!</h2>
-                            <p class="text-muted">Tu opinión nos ayuda a volar más alto.</p>
-                            <a href="https://maps.app.goo.gl/4jtC6ESecFzHeweeA"
-                                class="btn btn-primary btn-login m-2 px-3" target="_blank">
-                                Ir a Google Map
-                            </a>
+        <section id="testimonials" class="testimonials section">
+
+            <div class="container section-title aos-init aos-animate" data-aos="fade-up">
+                <h2>¡Tu opinión nos importa!</h2>
+                <p>Cada comentario nos ayuda a mejorar y ofrecerte una mejor experiencia.</p>
+            </div>
+
+            <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                <div class="row">
+                    <div class="col-lg-4 aos-init aos-animate" data-aos="fade-right" data-aos-delay="150">
+                        <div class="testimonials-sidebar">
+                            <div class="sidebar-content">
+                                <span class="satisfied-badge"><i class="bi bi-heart-fill"></i> Visitantes Satisfechos</span>
+                                <h3>Descubrí lo que nuestros visitantes dicen sobre su experiencia</h3>
+                                <a href="https://maps.app.goo.gl/PDo4wbzBGGZmfLQk9" target="_blank" class="btn btn-primary btn-login mt-3 px-3" style="box-shadow: 0 0px 30px rgba(0, 0, 0, 0.3);">Ir a Google Map</a>
+                            </div>
                         </div>
-                    </div>
+                    </div><!-- End Left Sidebar -->
+
+                <!-- Right Testimonials Slider -->
+                    <div class="col-lg-8 aos-init aos-animate" data-aos="fade-left" data-aos-delay="200">
+                        <div class="testimonials-img"></div>
+                    </div><!-- End Right Testimonials Slider -->
+
                 </div>
             </div>
         </section>
@@ -267,7 +281,7 @@
                     <div class="col-12 aos-init aos-animate">
                         <div class="service-block" data-aos="fade-up" data-aos-delay="200">
                             <div class="service-content">
-                                <div class="service-number">01</div>
+                                <div class="service-number">0.1</div>
                                 <div class="service-info">
                                     <h4>Aeronáutica Civil</h4>
                                     <p>
@@ -346,7 +360,7 @@
                     <div class="col-12 aos-init aos-animate">
                         <div class="service-block" data-aos="fade-up" data-aos-delay="200">
                             <div class="service-content">
-                                <div class="service-number">03</div>
+                                <div class="service-number">0.3</div>
                                 <div class="service-info">
                                     <h4>Hangar de aeronaves</h4>
                                     <p>

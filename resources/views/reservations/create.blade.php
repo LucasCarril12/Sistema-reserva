@@ -132,7 +132,6 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-
                         </div>
                     </div>
 
@@ -309,96 +308,67 @@
         const timeSelect  = document.getElementById('start_time');
         const submitBtn   = document.getElementById('submitBtn');
         const timeLoader  = document.getElementById('timeLoader');
-
-        // Mensaje debajo del select
-        let timeMessage = document.getElementById('timeMessage');
-        if(!timeMessage){
-            timeMessage = document.createElement('p');
-            timeMessage.id = 'timeMessage';
-            timeMessage.className = 'text-danger mt-1';
-            timeSelect.parentNode.appendChild(timeMessage);
-        }
+        const form        = document.getElementById('reservationForm');
+        const formLoader  = document.getElementById('formLoader');
 
         // ===== FECHA MÍNIMA (HOY + 10 DÍAS) =====
         const today = new Date();
-        const minDate = new Date();
-        minDate.setDate(today.getDate() + 9);
+        today.setHours(0,0,0,0);
 
-        const formatDate = (date) => date.toISOString().split('T')[0];
-        dateInput.setAttribute('min', formatDate(minDate));
+        const minDate = new Date(today);
+        minDate.setDate(today.getDate() + 10);
+
+        dateInput.min = minDate.toISOString().split('T')[0];
 
         // ===== CAMBIO DE FECHA =====
-        dateInput.addEventListener('change', function () {
+        dateInput.addEventListener('change', async function () {
 
-            const selectedDate = new Date(this.value);
-            const day = selectedDate.getDay(); // 0 dom, 6 sab
+            if (!this.value) return;
 
-            // Reset UI
-            submitBtn.disabled = true;
-            timeSelect.value = '';
-            timeMessage.innerText = '';
+            // Crear fecha LOCAL correctamente
+            const [y, m, d] = this.value.split('-').map(Number);
+            const selectedDate = new Date(y, m - 1, d);
+            selectedDate.setHours(0,0,0,0);
 
-            // Fecha mínima
-            if (selectedDate < minDate) {
-                Swal.fire('Fecha inválida', 'Debes elegir una fecha válida.', 'warning');
-                this.value = '';
-                return;
-            }
+            const day = selectedDate.getDay();
 
-            // Fin de semana
-            if (day === 6 || day === 0) {
+            // 🚫 FINES DE SEMANA
+            if (day === 0 || day === 6) {
                 Swal.fire('Día inválido', 'No se permiten reservas los fines de semana.', 'warning');
                 this.value = '';
                 return;
             }
 
-            // Loader
-            timeSelect.disabled = true;
-            timeLoader.classList.remove('d-none');
+            // 🚫 MENOS DE 10 DÍAS
+            if (selectedDate < minDate) {
+                Swal.fire('Fecha inválida', 'Debe reservar con al menos 10 días de anticipación.', 'warning');
+                this.value = '';
+                return;
+            }
 
-            // ===== FETCH DISPONIBILIDAD =====
-            fetch(`{{ route('reservations.availability') }}?reservation_date=${this.value}`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(res => res.json())
-            .then(data => {
+            // ✅ SI TODO ES VÁLIDO → CONSULTAR DISPONIBILIDAD
+            try {
 
-                let allDisabled = true;
+                timeLoader.classList.remove('d-none');
 
-                Array.from(timeSelect.options).forEach(opt => {
-                    if(opt.value === '') return;
+                const response = await fetch(`/reservations/availability?reservation_date=${this.value}`);
 
-                    const count = data[opt.value] ?? 0;
-
-                    if(count >= 2){
-                        opt.disabled = true;
-                        opt.text = `${opt.value} (completo)`;
-                        opt.classList.add('full-slot');
-                    } else {
-                        opt.disabled = false;
-                        opt.text = opt.value;
-                        opt.classList.remove('full-slot');
-                        allDisabled = false;
-                    }
-                });
-
-                if(allDisabled){
-                    Swal.fire(
-                        'Día completo',
-                        'Todos los horarios están ocupados. Elegí otra fecha.',
-                        'info'
-                    );
-                    dateInput.value = '';
+                if (!response.ok) {
+                    console.error("Error servidor:", response.status);
+                    return;
                 }
 
-            })
-            .catch(() => {
-                Swal.fire('Error', 'No se pudo verificar la disponibilidad.', 'error');
-            })
-            .finally(() => {
-                timeSelect.disabled = false;
+                const data = await response.json();
+                console.log("Disponibilidad:", data);
+
+                // 👉 Acá luego podés deshabilitar horarios
+
+            } catch (error) {
+                console.error(error);
+            } finally {
                 timeLoader.classList.add('d-none');
-            });
+            }
+
         });
 
         // ===== CAMBIO DE HORA =====
@@ -406,39 +376,25 @@
 
             const opt = this.options[this.selectedIndex];
 
-            if(opt && opt.disabled){
+            if (opt && opt.disabled) {
                 submitBtn.disabled = true;
-                timeMessage.innerText = 'Este horario ya alcanzó el máximo de 2 reservas.';
                 this.value = '';
-            } else if(this.value !== '') {
+            } else if (this.value !== '') {
                 submitBtn.disabled = false;
-                timeMessage.innerText = '';
             }
         });
 
-        // ===== PREVENIR ENVÍOS DOBLES =====
-        const form = document.getElementById('reservationForm');
-        const formLoader = document.getElementById('formLoader');
-
+        // ===== PREVENIR ENVÍO DOBLE =====
         form.addEventListener('submit', function () {
             submitBtn.disabled = true;
             formLoader.classList.remove('d-none');
         });
 
-        // ===== REAPLICAR SI VIENE CON OLD() =====
-        if(dateInput.value){
-            dateInput.dispatchEvent(new Event('change'));
-        }
+        
 
     });
-    </script>
+</script>
 
-    <style>
-    option.full-slot {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-</style>
 
 
 <script>

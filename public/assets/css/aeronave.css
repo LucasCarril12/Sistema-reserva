@@ -1,0 +1,149 @@
+/* ===============================
+   VARIABLES GLOBALES
+================================= */
+:root {
+    --museo-azul: #0b2a5b;
+    --museo-azul-claro: #123d7a;
+    --museo-blanco: #ffffff;
+    --museo-gris: #cfd8e3;
+}
+
+/* ===============================
+   FONDO GENERAL SECCIONES FICHA
+================================= */
+.section-museo {
+    background-color: var(--museo-azul);
+    color: var(--museo-blanco);
+}
+
+/* ===============================
+   TITULOS
+================================= */
+.museo-title {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--museo-blanco);
+}
+
+.museo-subtitle {
+    font-weight: 400;
+    color: var(--museo-blanco);
+}
+
+/* ===============================
+   IMAGENES FICHA
+================================= */
+.museo-img {
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+    /* fill the column and crop if needed */
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.museo-img:hover {
+    transform: scale(1.02);
+}
+
+/* ===============================
+   BLOQUES DE TEXTO
+================================= */
+.museo-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.museo-text strong {
+    font-weight: 600;
+}
+
+/* ===============================
+   BOTONES PERSONALIZADOS
+================================= */
+.btn-museo {
+    background-color: var(--museo-blanco);
+    color: var(--museo-azul);
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 20px;
+}
+
+.btn-museo:hover {
+    background-color: var(--museo-gris);
+    color: var(--museo-azul);
+}
+
+.btn-museo-outline {
+    border: 1px solid var(--museo-blanco);
+    color: var(--museo-blanco);
+    border-radius: 8px;
+    padding: 8px 20px;
+}
+
+.btn-museo-outline:hover {
+    background-color: var(--museo-blanco);
+    color: var(--museo-azul);
+}
+
+/* Fondo sección */
+.section-ul {
+    background-color: #f4f4f4;
+}
+
+/* Título principal */
+.titulo-ul {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1c2e5c;
+}
+
+.ulm {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.img-ultraliviano {
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+    /* fill the column and crop if needed */
+    width: 100%;
+    height: 250px;
+    object-fit: cover;      /* rellena sin deformar */
+    object-position: center; /* centra el contenido */
+    display: block;
+    margin: 0 auto;
+}
+
+/* Subtítulos */
+.subtitulo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1c2e5c;
+    margin-bottom: 15px;
+}
+
+/* Texto general */
+.section-ul p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* Botón museo */
+.btn-museo {
+    background-color: #1c2e5c;
+    color: #fff;
+    padding: 10px 28px;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-museo:hover {
+    background-color: #152247;
+    color: #fff;
+}
+

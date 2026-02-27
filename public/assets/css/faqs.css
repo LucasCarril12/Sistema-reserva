@@ -1,0 +1,106 @@
+/* ====== BASE ====== */
+
+/* Contenedor general */
+#faqAccordion {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ====== TÍTULO ====== */
+
+.text-center h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.text-center p {
+    font-size: 1rem;
+    color: #6b7280;
+}
+
+/* ====== ACCORDION CUSTOM ====== */
+
+.accordion-item {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 25px 0;
+}
+
+/* Botón pregunta */
+.accordion-button {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* Sacar fondo azul cuando está abierto */
+.accordion-button:not(.collapsed) {
+    color: #111827;
+    background: transparent;
+}
+
+/* Icono flecha más sutil */
+.accordion-button::after {
+    filter: brightness(0);
+    opacity: 0.6;
+}
+
+/* Respuesta */
+.accordion-body {
+    padding: 15px 0 0 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+/* Espaciado entre bloques */
+.accordion-item:last-child {
+    border-bottom: none;
+}
+
+/* ====== HERO HEADER ====== */
+
+
+
+/* ====== RESPONSIVE ====== */
+
+@media (max-width: 992px) {
+
+    .text-center h1 {
+        font-size: 1.8rem;
+    }
+
+    .accordion-button {
+        font-size: 1.05rem;
+    }
+
+    .accordion-body {
+        font-size: 0.9rem;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    #faqAccordion {
+        padding: 0 15px;
+    }
+
+    .accordion-item {
+        padding: 20px 0;
+    }
+
+    .accordion-button {
+        font-size: 1rem;
+    }
+
+    .accordion-body {
+        font-size: 0.85rem;
+    }
+}

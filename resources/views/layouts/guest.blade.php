@@ -30,7 +30,6 @@
         <!-- auth page bg -->
         <div class="auth-one-bg-position auth-one-bg" id="auth-particles">
             <div class="bg-overlay"></div>
-
         </div>
 
         <!-- //comando donde se insertara el conteido del login y registro -->

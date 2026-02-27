@@ -461,59 +461,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const selected = new Date(this.value);
         const day = selected.getDay(); // 0 dom - 6 sab
 
-        // ❌ fecha inválida
+        // fecha inválida
         if (selected < minDate) {
             Swal.fire('Fecha inválida', 'Elegí una fecha válida', 'warning');
             this.value = '';
             return;
         }
 
-        // ❌ fines de semana (sábado/domingo)
+        // fines de semana (sábado/domingo)
         if (day === 0 || day === 6) {
             Swal.fire('Día no disponible', 'No se permiten reservas fines de semana', 'warning');
             this.value = '';
             return;
         }
 
-        // 🔄 loader
-        timeSelect.disabled = true;
-
-        try {
-            const res = await fetch(`{{ route('reservations.availability') }}?reservation_date=${this.value}`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-
-            const data = await res.json();
-            let allFull = true;
-
-            [...timeSelect.options].forEach(opt => {
-                if (!opt.value) return;
-
-                const count = data[opt.value] ?? 0;
-
-                if (count >= MAX_PER_SLOT) {
-                    opt.disabled = true;
-                    opt.text = `${opt.value} (completo)`;
-                    opt.classList.add('full-slot');
-                } else {
-                    opt.disabled = false;
-                    opt.text = opt.value;
-                    opt.classList.remove('full-slot');
-                    allFull = false;
-                }
-            });
-
-            if (allFull) {
-                Swal.fire('Día completo', 'No hay horarios disponibles', 'info');
-                dateInput.value = '';
-            }
-
-        } catch (e) {
-            console.error(e);
-            Swal.fire('Error', 'No se pudo validar disponibilidad', 'error');
+       // SI TODO ES VÁLIDO → CONSULTAR DISPONIBILIDAD
+        if (!this.value || this.value.trim() === '') {
+            return; // 🔒 Nunca hacer fetch si está vacío
         }
 
-        timeSelect.disabled = false;
+        try {
+
+            timeLoader.classList.remove('d-none');
+
+            const response = await fetch(
+                `/reservations/availability?reservation_date=${encodeURIComponent(this.value)}`,
+                { cache: 'no-store' }
+            );
+
+            if (!response.ok) {
+                console.error("Error servidor:", response.status);
+                return;
+            }
+
+            const data = await response.json();
+            console.log("Disponibilidad:", data);
+
+        } catch (error) {
+            console.error(error);
+        } finally {
+            timeLoader.classList.add('d-none');
+        }
+
     });
 
     // --- CUANDO CAMBIA LA HORA ---
