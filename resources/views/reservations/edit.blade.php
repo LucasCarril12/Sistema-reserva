@@ -128,7 +128,6 @@
                                 <option value="13:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '13:00' ? 'selected' : '' }}>13:00</option>
                                 <option value="14:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '14:00' ? 'selected' : '' }}>14:00</option>
                                 <option value="15:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '15:00' ? 'selected' : '' }}>15:00</option>
-                                <option value="16:00" {{ old('start_time', $reservation->start_time ?? $reservation->detail->start_time) == '16:00' ? 'selected' : '' }}>16:00</option>
                             </select>
                             @error('start_time')
                                 <span class="invalid-feedback" role="alert">

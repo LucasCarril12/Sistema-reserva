@@ -42,7 +42,7 @@
                         <a
                             href="{{ route('login') }}"
                             class="btn btn-primary btn-login m-2 px-3" >
-                            Ingresar a Mi Cuenta
+                            Agendar visita guiada
                         </a>
                     @endauth
                 </nav>

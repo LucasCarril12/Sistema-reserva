@@ -28,7 +28,7 @@ class ReservationController extends Controller
      * Time slots available for reservations.
      * Keep in sync with the view select options.
      */
-    protected $timeSlots = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00'];
+    protected $timeSlots = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00'];
 
     /**
      * Display a listing of the resource.

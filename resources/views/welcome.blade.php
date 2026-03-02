@@ -102,7 +102,7 @@
                                             </div>
                                             <div class="stat-info">
                                                 <h3>Visita guiada</h3>
-                                                <p>Agenda tu visita guiada</p>
+                                                <p>Agenda tu visita guiada<br><span style="color: #006ED2;font-weight:600;">Click aquí</span></p>
                                             </div>
                                         </div>
                                     </a>
@@ -128,11 +128,11 @@
                         <div class="content-section">
                             <div class="section-intro">
                                 <div class="company-badge" style="color:#006ED2; font-weight: 500;">¡Agenda tu visita guiada!</div>
-                                <h2 class="mt-3">Se realizan visitas guiadas de lunes a viernes</h2>
+                                <h2 class="mt-3">Visitas guiadas de lunes a viernes</h2>
                                 <p class="intro-text">Las visitas guiadas se realizan junto a
-                                    un guía del museo, quien acompaña a los visitantes durante
-                                    el recorrido. El museo cuenta con <strong>tres salas</strong>, y la duración
-                                    de la visita es de entre <strong>1 y 2 horas</strong>,
+                                    un guía del museo,<br>quien acompaña a los visitantes durante
+                                    el recorrido.<br>El museo cuenta con <strong>tres salas</strong>, y la duración
+                                    de la visita es de entre<br><strong>1 y 2 horas</strong>,
                                     dependiendo de las salas que se elijan recorrer.</p>
                             </div>
 
@@ -281,14 +281,14 @@
                     <div class="col-12 aos-init aos-animate">
                         <div class="service-block" data-aos="fade-up" data-aos-delay="200">
                             <div class="service-content">
-                                <div class="service-number">0.1</div>
+                                <div class="service-number">1</div>
                                 <div class="service-info">
                                     <h4>Aeronáutica Civil</h4>
                                     <p>
-                                        El museo presenta los inicios de la aviación en Uruguay,
-                                        destacando a sus pioneros, primeras aeronaves, aeropuertos
-                                        y compañías aéreas, junto a figuras nacionales e internacionales
-                                        que marcaron su historia.
+                                        El museo presenta los inicios de la aviación en Uruguay,<br>
+                                        destacando a sus pioneros, primeras aeronaves, aeropuertos<br>
+                                        y compañías aéreas, junto a figuras nacionales e internacionales<br>
+                                        que marcaron su historia.<br>
                                     </p>
                                 </div>
                             </div>
@@ -308,14 +308,14 @@
                                 <div class="service-info">
                                     <h4>Aeronáutica Militar y Naval</h4>
                                     <p>
-                                        El edificio dedicado a la aeronáutica militar
-                                        y naval recorre la historia del vuelo militar
-                                        en Uruguay, homenajeando a sus principales
-                                        precursores y destacando hitos como la misión antártica
-                                        “Antarkos I”. También presenta la evolución de la
-                                        Aeronáutica Naval, misiones de paz de la ONU, uniformes,
-                                        equipamiento histórico y una valiosa colección de maquetas
-                                        de la aviación nacional y mundial.
+                                        El edificio dedicado a la aeronáutica militar<br>
+                                        y naval recorre la historia del vuelo militar<br>
+                                        en Uruguay, homenajeando a sus principales<br>
+                                        precursores y destacando hitos como la misión antártica<br>
+                                        “Antarkos I”. También presenta la evolución de la<br>
+                                        Aeronáutica Naval, misiones de paz de la ONU, uniformes,<br>
+                                        equipamiento histórico y una valiosa colección de maquetas<br>
+                                        de la aviación nacional y mundial.<br>
                                     </p>
                                 </div>
                             </div>
@@ -335,21 +335,21 @@
                                 <div class="service-info">
                                     <h4>Espacial "De la Tierra a las estrellas"</h4>
                                     <p>
-                                        La sala “De la Tierra a las estrellas” propone un
-                                        recorrido académico por los avances que llevaron a
-                                        la humanidad al espacio, desde sus primeros precursores
-                                        hasta los grandes hitos de la exploración espacial.
-                                        Incluye maquetas, paneles informativos y la participación
-                                        de Uruguay en el ámbito espacial, además de piezas
-                                        destacadas como una bandera nacional que viajó a la
-                                        Luna en la misión Apolo XI, fragmentos de roca lunar y
-                                        autógrafos de astronautas, junto a una línea de tiempo
+                                        La sala “De la Tierra a las estrellas” propone un<br>
+                                        recorrido académico por los avances que llevaron a<br>
+                                        la humanidad al espacio, desde sus primeros precursores<br>
+                                        hasta los grandes hitos de la exploración espacial.<br>
+                                        Incluye maquetas, paneles informativos y la participación<br>
+                                        de Uruguay en el ámbito espacial, además de piezas<br>
+                                        destacadas como una bandera nacional que viajó a la<br>
+                                        Luna en la misión Apolo XI, fragmentos de roca lunar y<br>
+                                        autógrafos de astronautas, junto a una línea de tiempo<br>
                                         con los principales logros hasta la exploración de Marte.
                                     </p>
                                 </div>
                             </div>
                             <div class="service-image">
-                                <img src="{{ asset('assets/images/edificios/sala espacial.png')}}" alt="Buy Dream Home" class="img-fluid">
+                                <img src="{{ asset('assets/images/edificios/Sala militar 1.png')}}" alt="Buy Dream Home" class="img-fluid">
                                 <div class="image-overlay">
                                     <i class="bi bi-building"></i>
                                 </div>
@@ -360,25 +360,25 @@
                     <div class="col-12 aos-init aos-animate">
                         <div class="service-block" data-aos="fade-up" data-aos-delay="200">
                             <div class="service-content">
-                                <div class="service-number">0.3</div>
+                                <div class="service-number">3</div>
                                 <div class="service-info">
                                     <h4>Hangar de aeronaves</h4>
                                     <p>
-                                        El recorrido presenta la historia del vuelo a través
-                                        de paneles y piezas históricas, junto a una destacada
-                                        exhibición de aeronaves civiles y militares, desde una
-                                        réplica del Blériot XI de 1910 hasta un IA-58 Pucará. Incluye
-                                        helicópteros, motores, hélices, instrumentos de vuelo, la
-                                        primera pantalla de radar del país y diversos equipos
-                                        históricos, además de simuladores y un espacio dedicado
-                                        al accidente de los Andes de 1972 y a la exploración espacial.
-                                        En el hangar también se encuentra el Espacio de las Telecomunicaciones
+                                        El recorrido presenta la historia del vuelo a través<br>
+                                        de paneles y piezas históricas, junto a una destacada<br>
+                                        exhibición de aeronaves civiles y militares, desde una<br>
+                                        réplica del Blériot XI de 1910 hasta un IA-58 Pucará. <br>Incluye
+                                        helicópteros, motores, hélices, instrumentos de vuelo, la<br>
+                                        primera pantalla de radar del país y diversos equipos<br>
+                                        históricos, además de simuladores y un espacio dedicado<br>
+                                        al accidente de los Andes de 1972 y a la exploración espacial.<br>
+                                        En el hangar también se encuentra el Espacio de las Telecomunicaciones<br>
                                         de Antel, que muestra la evolución de las TIC.
                                     </p>
                                 </div>
                             </div>
                             <div class="service-image">
-                                <img src="{{ asset('assets/images/edificios/sala espacial.png')}}" alt="Buy Dream Home" class="img-fluid">
+                                <img src="{{ asset('assets/images/edificios/Sala hangar.png')}}" alt="Buy Dream Home" class="img-fluid">
                                 <div class="image-overlay">
                                     <i class="bi bi-building"></i>
                                 </div>

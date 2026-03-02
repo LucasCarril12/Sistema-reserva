@@ -146,7 +146,6 @@
                                 <option value="13:00">13:00</option>
                                 <option value="14:00">14:00</option>
                                 <option value="15:00">15:00</option>
-                                <option value="16:00">16:00</option>
                             </select>
                             <div id="timeLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" style="vertical-align: middle;">
                                 <span class="visually-hidden">Cargando...</span>

@@ -24,7 +24,6 @@
             <span class="spanLogo logo-lg">
                 <img src="{{ asset('assets/images/LogoMuseo.png')}}" alt="" height="60">
             </span>
-
         </a>
 
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
