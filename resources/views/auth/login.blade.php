@@ -66,7 +66,7 @@
                                     <button class="btn btn-success w-100" type="submit">{{ __('Iniciar Sesión') }}</button>
                                 </div>
 
-                            </form>
+                            </form> 
                         </div>
                     </div>
                     <!-- end card body -->
@@ -74,7 +74,7 @@
                 <!-- end card -->
 
                 <div class="mt-4 text-center">
-                    <p class="mb-0">¿No tienes cuenta? <a href="{{ route('register')}}" class="fw-semibold text-primary text-decoration-underline"> Crear Cuenta </a> </p>
+                    <p class="mb-0">¿No tienes cuenta? <a href="{{ route('register')}}" class="fw-semibold text-primary text-decoration-underline"> Crear Cuenta </a> | <a href="{{ route('password.request') }}" class="fw-semibold text-primary text-decoration-underline"> Olvidé mi contraseña </a> </p>
                 </div>
 
             </div>

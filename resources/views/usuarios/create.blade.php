@@ -128,8 +128,8 @@
                         <div>
                             <label for="password" class="form-label">{{ __('Contraseña:') }}</label>
                             {{-- <input type="text" class="form-control " id="password" value="12345678" readonly> --}}
-                            <input type="hidden" name="password" value="12345678">
-                            <input type="text" class="form-control" value="12345678" readonly>
+                            <input type="hidden" name="password" value="Se envia a Mail">
+                            <input type="text" class="form-control" value="Se envia a Mail" readonly>
 
                         </div>
                     </div>

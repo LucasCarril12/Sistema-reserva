@@ -35,7 +35,7 @@ Route::get('/two-factor', [TwoFactorController::class, 'index'])
     ->name('2fa.verify');
 
 Route::post('/two-factor', [TwoFactorController::class, 'store'])
-    ->name('2fa.store');
+    ->name('2fa.store')->middleware('throttle:5,5');
 
 Route::post('/two-factor/resend', [TwoFactorController::class, 'resend'])
     ->name('2fa.resend');
@@ -58,7 +58,7 @@ Route::resource('reservations', ReservationController::class)
     ->middleware('auth');
 
 Route::post('/reservations/cancel', [ReservationController::class, 'cancel'])
-    ->name('reservations.cancel');
+    ->name('reservations.cancel')->middleware('auth');
 
 // Calendarios
 Route::get('/reservation/calendario', function(){ return view('reservations.calendario'); })->middleware('auth')->name('reservations.calendario');
@@ -67,7 +67,7 @@ Route::get('/cliente/calendario', function(){ return view('cliente.calendario');
 
 Route::get('administrador/fullcalendar', [ReservationController::class, 'getAllReservations'])
     ->name('administrador.fullcalendar')
-    ->middleware('auth');
+    ->middleware(['auth', 'isAdmin']);
 
 Route::get('guia/fullcalendar', [ReservationController::class, 'getAllReservations'])
     ->name('guia.fullcalendar')

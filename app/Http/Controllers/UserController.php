@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 // libreria para encriptar contraseña
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -31,16 +33,24 @@ class UserController extends Controller
             'nombres' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
             'telefono' => 'required|string|max:15',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'email' => [
+                'required', 'string', 'email', 'max:255',
+                Rule::unique('users', 'email')->whereNull('deleted_at'),
+            ],
+            'ci' => [
+                'required', 'numeric', 'digits_between:6,8',
+                Rule::unique('users', 'ci')->whereNull('deleted_at'),
+            ],
             'rol_id' => 'required|integer',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'ci' => 'required|numeric|digits_between:6,8|unique:users,ci'
         ]);
 
         $fotoPath = null;
         if($request->hasFile('foto')){
             $fotoPath = $request->file('foto')->store('fotos','public');
         }
+
+        $plainPassword = Str::random(12);
 
         //Creamos usuario
         User::create([
@@ -49,10 +59,19 @@ class UserController extends Controller
             'telefono' => $request->telefono,
             'email' => $request->email,
             'rol_id' => $request->rol_id,
-            'password' => Hash::make('12345678'), //Cuando se cree un usuario este tendra la contraseña "12345678" por defecto
+            'password' => Hash::make($plainPassword), //contraseña aleatoria
             'foto' => $fotoPath,
             'ci' => $request->ci,
         ]);
+
+        // Enviar contraseña por email
+        Mail::raw(
+            "Hola {$request->nombres}, tu cuenta fue creada. Tu contraseña es: {$plainPassword}",
+            function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject('Tu cuenta en Museo Aeronáutico');
+            }
+        );
 
         return redirect()->route('usuarios.index')->with('success_create','Registro creado correctamente');
     }

@@ -37,7 +37,7 @@ class AuthenticatedSessionController extends Controller
 
         // Guardar código y expiración
         $user->update([
-            'two_factor_code' => $code,
+            'two_factor_code' => bcrypt($code),
             'two_factor_expires_at' => now()->addMinutes(10),
         ]);
 

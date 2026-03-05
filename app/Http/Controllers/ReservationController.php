@@ -227,6 +227,11 @@ class ReservationController extends Controller
     // Edit seccion
     public function edit(string $id){
         $reservation = Reservation::findOrFail($id);
+
+        // Solo bloquear si es un cliente (rol_id = 3)
+        if (Auth::user()->rol_id === 3 && $reservation->user_id !== Auth::id()) {
+            abort(403, 'No tenés permiso para editar esta reserva.');
+        }
         $reservation->start_time = Carbon::parse($reservation->start_time)->format('H:i');
 
         $users = User::where('rol_id',3)

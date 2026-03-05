@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\TwoFactorCodeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class TwoFactorController extends Controller
 {
@@ -36,7 +37,7 @@ class TwoFactorController extends Controller
         }
 
         if (
-            $user->two_factor_code !== $request->code ||
+            !Hash::check($request->code, $user->two_factor_code) ||
             $user->two_factor_expires_at->isPast()
         ) {
             return back()->withErrors(['code' => 'Código inválido o expirado']);
@@ -77,7 +78,7 @@ class TwoFactorController extends Controller
 
         // Guardar código y expiración
         $user->update([
-            'two_factor_code' => $code,
+            'two_factor_code' => bcrypt($code),
             'two_factor_expires_at' => now()->addMinutes(10),
         ]);
 
